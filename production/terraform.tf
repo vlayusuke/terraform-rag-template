@@ -1,0 +1,78 @@
+# ================================================================================
+# Terraform
+# ================================================================================
+terraform {
+  required_version = ">= 1.10.0, < 2.0.0"
+
+  backend "s3" {
+    bucket  = "v-terraform-rag-template-prd"
+    key     = "state/production.terraform.tfstate"
+    region  = "ap-northeast-1"
+    profile = "terraform-template"
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "6.40.0"
+    }
+
+    awscc = {
+      source  = "hashicorp/awscc"
+      version = "1.79.0"
+    }
+  }
+}
+
+data "aws_elb_service_account" "main" {}
+data "aws_region" "current" {}
+
+provider "aws" {
+  region  = "ap-northeast-1"
+  profile = "terraform-template"
+
+  default_tags {
+    tags = {
+      Managed         = "terraform"
+      Project         = local.project
+      Environment     = local.env
+      Repository      = local.repository
+      Author          = local.author
+      ChorusCost_Tag1 = local.project
+      ChorusCost_Tag2 = local.env
+    }
+  }
+}
+
+provider "aws" {
+  region  = "ap-northeast-3"
+  alias   = "osaka"
+  profile = "terraform-template"
+  default_tags {
+    tags = {
+      Managed         = "terraform"
+      Project         = local.project
+      Environment     = local.env
+      Repository      = local.repository
+      Author          = local.author
+      ChorusCost_Tag1 = local.project
+      ChorusCost_Tag2 = local.env
+    }
+  }
+}
+
+provider "aws" {
+  region  = "us-east-1"
+  alias   = "virginia"
+  profile = "terraform-template"
+
+  default_tags {
+    tags = {
+      Managed     = "terraform"
+      Project     = local.project
+      Environment = local.env
+      Repository  = local.repository
+      Author      = local.author
+    }
+  }
+}
