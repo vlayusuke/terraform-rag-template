@@ -1,0 +1,7 @@
+# Slack & Chatbot Settings
+hook_url_app       = ""
+slack_workspace_id = ""
+slack_channel_id   = ""
+
+# Bastion Settings
+aws_key_pub_bastion = ""
