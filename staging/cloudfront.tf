@@ -9,7 +9,7 @@ resource "aws_cloudfront_distribution" "main" {
   web_acl_id      = aws_wafv2_web_acl.main.arn
 
   aliases = [
-    local.domain,
+    "${local.env}.${local.domain}",
   ]
 
   viewer_certificate {
@@ -20,8 +20,8 @@ resource "aws_cloudfront_distribution" "main" {
   }
 
   origin {
-    domain_name = aws_api_gateway_domain_name.response_api.regional_domain_name
-    origin_id   = aws_api_gateway_rest_api.response_api.name
+    domain_name = aws_lb.main_external.dns_name
+    origin_id   = aws_lb.main_external.name
 
     custom_origin_config {
       http_port                = 80
@@ -39,34 +39,35 @@ resource "aws_cloudfront_distribution" "main" {
     allowed_methods = [
       "GET",
       "HEAD",
+      "DELETE",
       "OPTIONS",
+      "PATCH",
+      "POST",
+      "PUT",
     ]
     cached_methods = [
       "GET",
       "HEAD",
     ]
 
-    compress               = false
-    default_ttl            = 0
-    max_ttl                = 0
-    min_ttl                = 0
-    smooth_streaming       = false
-    target_origin_id       = aws_api_gateway_rest_api.response_api.name
-    trusted_signers        = []
-    viewer_protocol_policy = "allow-all"
+    compress                   = false
+    default_ttl                = 0
+    max_ttl                    = 0
+    min_ttl                    = 0
+    smooth_streaming           = false
+    target_origin_id           = aws_lb.main_external.name
+    trusted_signers            = []
+    viewer_protocol_policy     = "redirect-to-https"
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.main.id
 
     forwarded_values {
-      query_string = false
+      headers                 = ["*"]
+      query_string            = true
+      query_string_cache_keys = []
 
       cookies {
-        forward = "none"
+        forward = "all"
       }
-
-      headers = [
-        "Access-Control-Request-Headers",
-        "Access-Control-Request-Method",
-        "Origin",
-      ]
     }
 
     #     function_association {
