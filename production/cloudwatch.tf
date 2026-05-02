@@ -137,9 +137,9 @@ resource "aws_cloudwatch_log_subscription_filter" "sns_to_lambda" {
 
 
 # ===============================================================================
-# Amazon CloudWatch Log group for AWS Lambda Functions
+# Amazon CloudWatch Log group for AWS Lambda Function
 # ===============================================================================
-resource "aws_cloudwatch_log_group" "lambda_functions" {
+resource "aws_cloudwatch_log_group" "lambda_function" {
   for_each          = local.lambda_functions
   name              = "/aws/lambda/${each.key}-cwlog"
   retention_in_days = local.retention_in_days
@@ -149,24 +149,24 @@ resource "aws_cloudwatch_log_group" "lambda_functions" {
   }
 }
 
-resource "aws_cloudwatch_log_stream" "lambda_functions" {
+resource "aws_cloudwatch_log_stream" "lambda_function" {
   for_each       = local.lambda_functions
   name           = "${local.project}-${local.env}-cw-lambda-${each.key}-cwstream"
-  log_group_name = aws_cloudwatch_log_group.lambda_functions[each.key].name
+  log_group_name = aws_cloudwatch_log_group.lambda_function[each.key].name
 }
 
-resource "aws_cloudwatch_log_subscription_filter" "lambda_functions_to_lambda" {
+resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_lambda" {
   for_each        = local.lambda_functions
   name            = aws_lambda_function.lambda_log_error_alert.function_name
-  log_group_name  = aws_cloudwatch_log_group.lambda_functions[each.key].name
+  log_group_name  = aws_cloudwatch_log_group.lambda_function[each.key].name
   filter_pattern  = "ERROR"
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
 }
 
-resource "aws_cloudwatch_log_subscription_filter" "lambda_functions_to_firehose" {
+resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_firehose" {
   for_each        = local.lambda_functions
   name            = "${local.project}-${local.env}-cw-lambda-${each.key}-to-firehose"
-  log_group_name  = aws_cloudwatch_log_group.lambda_functions[each.key].name
+  log_group_name  = aws_cloudwatch_log_group.lambda_function[each.key].name
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.lambda_logs[each.key].arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
