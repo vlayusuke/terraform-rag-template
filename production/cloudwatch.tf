@@ -490,7 +490,7 @@ resource "aws_cloudwatch_log_delivery_source" "cloudfront_access_logs" {
   provider     = aws.virginia
   name         = "${local.project}-${local.env}-cw-cloudfront-access-logs-source"
   log_type     = "ACCESS_LOGS"
-  resource_arn = aws_cloudfront_distribution.production.arn
+  resource_arn = aws_cloudfront_distribution.main.arn
 
   tags = {
     Name = "${local.project}-${local.env}-cw-cloudfront-access-logs-source"
