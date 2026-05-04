@@ -42,7 +42,7 @@ resource "aws_instance" "ec2_bastion" {
 
   ebs_block_device {
     device_name = "/dev/xvdf"
-    volume_size = "256"
+    volume_size = "64"
     volume_type = "gp3"
     encrypted   = true
     kms_key_id  = aws_kms_key.ebs.arn
