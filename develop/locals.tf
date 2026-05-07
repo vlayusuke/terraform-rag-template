@@ -33,7 +33,7 @@ locals {
 # Amazon Aurora Serverless v2
 # ================================================================================
 locals {
-  rds_cluster_instance_count = 1
+  rds_cluster_instance_count = 2
 
   # Postgres Role Name
   rds_postgres_role_name = "bedrock_role"
@@ -51,10 +51,10 @@ locals {
 # Amazon CloudWatch
 # ================================================================================
 locals {
-  retention_in_days = 180
+  retention_in_days = 30
 
   lambda_functions = toset([
-    aws_lambda_function.poke_api.function_name,
+    aws_lambda_function.request_api.function_name,
     aws_lambda_function.response_api.function_name,
     aws_lambda_function.lambda_log_error_alert.function_name,
     aws_lambda_function.lambda_metric_alarm.function_name,
