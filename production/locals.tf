@@ -33,7 +33,7 @@ locals {
 # Amazon Aurora Serverless v2
 # ================================================================================
 locals {
-  rds_cluster_instance_count = 1
+  rds_cluster_instance_count = 2
 
   # Postgres Role Name
   rds_postgres_role_name = "bedrock_role"
