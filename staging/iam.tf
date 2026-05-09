@@ -880,7 +880,7 @@ data "aws_iam_policy_document" "chatbot" {
     resources = [
       aws_sns_topic.metric_alarm.arn,
       aws_sns_topic.event_alarm.arn,
-      aws_sns_topic.to_slack.arn,
+      aws_sns_topic.event_notification.arn,
     ]
     condition {
       test     = "StringEquals"
@@ -901,7 +901,7 @@ data "aws_iam_policy_document" "chatbot" {
     resources = [
       aws_sns_topic.metric_alarm.arn,
       aws_sns_topic.event_alarm.arn,
-      aws_sns_topic.to_slack.arn,
+      aws_sns_topic.event_notification.arn,
     ]
   }
 
