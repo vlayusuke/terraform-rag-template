@@ -60,3 +60,9 @@ terraform providers lock \
   -platform=darwin_arm64 \
   -platform=linux_arm64
 ```
+
+## インフラ構成図
+
+このテンプレートで構築が可能なアーキテクチャのインフラ構成図は以下の通りです。
+
+![インフラ構成図](terraform-rag-template-v2.3-en.svg)
