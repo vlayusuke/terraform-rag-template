@@ -78,6 +78,83 @@ resource "aws_bedrock_guardrail_version" "bedrock_guardrail_version" {
 
 
 # ===============================================================================
+# Amazon Bedrock Agent
+# ===============================================================================
+resource "aws_bedrockagent_agent" "bedrock_agent" {
+  agent_name                  = "${local.project}-${local.env}-brk-api-agent"
+  agent_resource_role_arn     = aws_iam_role.bedrock_agent.arn
+  description                 = "Amazon Bedrock Agent for ${local.project}-${local.env}"
+  foundation_model            = data.aws_bedrock_foundation_model.bedrock_agent_model.model_id
+  region                      = local.region
+  idle_session_ttl_in_seconds = 600
+  instruction                 = <<EOT
+    You are a helpful assistant for providing information about AWS services.
+    When you receive a question, please provide an answer based on the information you have.
+  EOT
+
+  guardrail_configuration = [
+    {
+      guardrail_identifier = aws_bedrock_guardrail.bedrock_guardrail.name
+      guardrail_version    = aws_bedrock_guardrail_version.bedrock_guardrail_version.version
+    }
+  ]
+
+  tags = {
+    Name = "${local.project}-${local.env}-brk-api-agent"
+  }
+}
+
+data "aws_bedrock_foundation_model" "bedrock_agent_model" {
+  model_id = local.bedrock_foundation_model
+}
+
+resource "aws_bedrockagent_agent_action_group" "bedrock_agent_action_group" {
+  action_group_name          = "invoke-api-action-group"
+  agent_id                   = aws_bedrockagent_agent.bedrock_agent.id
+  agent_version              = "DRAFT"
+  skip_resource_in_use_check = true
+
+  action_group_executor {
+    lambda = aws_lambda_function.request_api.arn
+  }
+
+  api_schema {
+    payload = file("${path.module}/files/schema/request-api-schema.yml")
+  }
+}
+
+# less than 10 characters [0-9a-zA-Z]+
+resource "aws_bedrockagent_agent_alias" "bedrock_agent" {
+  agent_id         = aws_bedrockagent_agent.bedrock_agent.id
+  agent_alias_name = "requestapi"
+}
+
+resource "aws_bedrockagent_prompt" "bedrock_prompt" {
+  name        = "${local.project}-${local.env}-brk-api-prompt"
+  description = "Amazon Bedrock Prompt for ${local.project}-${local.env}"
+
+  variant {
+    name          = "${local.project}-${local.env}-brk-api-prompt-variant"
+    model_id      = data.aws_bedrock_foundation_model.bedrock_agent_model.model_id
+    template_type = "TEXT"
+
+    template_configuration {
+      text {
+        text = "Your prompt template goes here"
+        cache_point {
+          type = "default"
+        }
+      }
+    }
+  }
+
+  tags = {
+    Name = "${local.project}-${local.env}-brk-action-group-prompt"
+  }
+}
+
+
+# ===============================================================================
 # Amazon Bedrock Knowledge base
 # ===============================================================================
 resource "aws_bedrockagent_knowledge_base" "knowledge_base" {
@@ -136,4 +213,24 @@ resource "aws_bedrockagent_data_source" "bedrock_data_source" {
       bucket_arn = aws_s3_bucket.rag_documents.arn
     }
   }
+}
+
+
+# ===============================================================================
+# Associate with Amazon Bedrock Agent and Amazon Bedrock Knowledge base
+# ===============================================================================
+resource "aws_bedrockagent_agent_knowledge_base_association" "bedrock_agent_knowledge_base_association" {
+  agent_id = aws_bedrockagent_agent.bedrock_agent.id
+
+  # Instructions for the knowledge base data source. Required field.
+  description = <<EOT
+    Questions about the documents, please search the knowledge base for an answer.
+  EOT
+
+  knowledge_base_id    = aws_bedrockagent_knowledge_base.knowledge_base.id
+  knowledge_base_state = "ENABLED"
+
+  depends_on = [
+    aws_bedrockagent_knowledge_base.knowledge_base,
+  ]
 }
