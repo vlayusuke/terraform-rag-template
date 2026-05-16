@@ -1,0 +1,35 @@
+openapi: 3.0.0
+info:
+  title: "terraform-rag-template-request API"
+  version: 1.0.0
+  description: "APIs for testing Agents behavior"
+paths:
+  "/search":
+    get:
+      summary: "terraform-rag-template-request-search"
+      description: "If you want to search document, please call this API with document_id."
+      operationId: search
+      parameters:
+        - name: document_id
+          in: path
+          description: "Document ID"
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: "Search successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: "Document ID"
+                  name:
+                    type: string
+                    description: "Document Name"
+                  summary:
+                    type: string
+                    description: "Document Summary"
