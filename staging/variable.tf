@@ -25,6 +25,20 @@ variable "aws_key_pub_bastion" {
 variable "maintenance_ips" {
   sensitive = true
   default = [
-    "60.67.101.143/32", # Home (IPv4)
+    "192.168.0.1/32", # Example (IPv4)
   ]
+}
+
+
+# ================================================================================
+# Amazon CloudFront Key-Value Store Settings
+# ================================================================================
+variable "basic_auth_username" {
+  type      = string
+  sensitive = true
+}
+
+variable "basic_auth_password" {
+  type      = string
+  sensitive = true
 }
