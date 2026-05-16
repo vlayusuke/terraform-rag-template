@@ -5,3 +5,7 @@ slack_channel_id   = ""
 
 # Bastion Settings
 aws_key_pub_bastion = ""
+
+# Amazon CloudFront Key-Value Store Settings
+basic_auth_username = ""
+basic_auth_password = ""
