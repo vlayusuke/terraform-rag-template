@@ -210,7 +210,7 @@ resource "aws_bedrockagent_data_source" "bedrock_data_source" {
     type = "S3"
 
     s3_configuration {
-      bucket_arn = aws_s3_bucket.rag_documents.arn
+      bucket_arn = aws_s3_bucket.rag_document.arn
     }
   }
 }
