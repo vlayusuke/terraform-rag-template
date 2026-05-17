@@ -17,7 +17,7 @@ resource "aws_instance" "ec2_bastion" {
   ]
 
   user_data = templatefile(
-    "src/files/startup_scripts/bastion.sh",
+    "files/startup_scripts/bastion.sh",
     {
       bastion_bucket = aws_s3_bucket.bastion.id
       iam_ssh_bucket = aws_s3_bucket.bastion.id
