@@ -61,7 +61,7 @@ resource "aws_rds_cluster" "aurora_postgres" {
 resource "aws_db_subnet_group" "aurora_postgres" {
   name = "${local.project}-${local.env}-aurora-serverless-subg"
   subnet_ids = [
-    for subnet in aws_subnet.production_private :
+    for subnet in aws_subnet.main_private :
     subnet.id
   ]
 

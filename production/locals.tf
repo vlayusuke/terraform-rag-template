@@ -54,7 +54,7 @@ locals {
   retention_in_days = 180
 
   lambda_functions = toset([
-    aws_lambda_function.poke_api.function_name,
+    aws_lambda_function.request_api.function_name,
     aws_lambda_function.response_api.function_name,
     aws_lambda_function.lambda_log_error_alert.function_name,
     aws_lambda_function.lambda_metric_alarm.function_name,
@@ -66,13 +66,13 @@ locals {
     "iam-db-auth-error",
   ])
 
-  aurora_log_types = aws_kinesis_firehose_delivery_stream.aurora_logs_postgresql.arn
+  aurora_log_types = aws_kinesis_firehose_delivery_stream.aurora_postgresql_logs.arn
 
   enabled_cloudwatch_logs_exports_for_bedrock = toset([
-    "knowledge-bases",
+    "knowledge-base",
   ])
 
-  bedrock_log_types = aws_kinesis_firehose_delivery_stream.bedrock_logs_knowledge_bases.arn
+  bedrock_log_types = aws_kinesis_firehose_delivery_stream.bedrock_knowledge_base_logs.arn
 }
 
 
