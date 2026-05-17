@@ -22,7 +22,7 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_firehose" 
   name            = "${local.project}-${local.env}-cw-rds-${each.key}-to-firehose"
   log_group_name  = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}"
   filter_pattern  = ""
-  destination_arn = aws_kinesis_firehose_delivery_stream.aurora_postgres_logs.arn
+  destination_arn = aws_kinesis_firehose_delivery_stream.aurora_postgresql_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
 
