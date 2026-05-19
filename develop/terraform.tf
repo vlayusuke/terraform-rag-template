@@ -34,13 +34,11 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Managed         = "terraform"
-      Project         = local.project
-      Environment     = local.env
-      Repository      = local.repository
-      Author          = local.author
-      ChorusCost_Tag1 = local.project
-      ChorusCost_Tag2 = local.env
+      Managed     = "terraform"
+      Project     = local.project
+      Environment = local.env
+      Repository  = local.repository
+      Author      = local.author
     }
   }
 }
@@ -51,13 +49,11 @@ provider "aws" {
   profile = "terraform-template"
   default_tags {
     tags = {
-      Managed         = "terraform"
-      Project         = local.project
-      Environment     = local.env
-      Repository      = local.repository
-      Author          = local.author
-      ChorusCost_Tag1 = local.project
-      ChorusCost_Tag2 = local.env
+      Managed     = "terraform"
+      Project     = local.project
+      Environment = local.env
+      Repository  = local.repository
+      Author      = local.author
     }
   }
 }
