@@ -36,7 +36,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 ### Terraformや各種ProviderのVersion
 
 | Resources                  | Version  |
-| -------------------------- | -------- |
+| :------------------------- | -------: |
 | Terraform                  | 1.15.3   |
 | AWS Provider               | 6.45.0   |
 | AWS Cloud Control Provider | 1.84.0   |
@@ -44,7 +44,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 ### AWS Lambda関数に使用しているPythonのruntime
 
 | Resources                  | Version  |
-| -------------------------- | -------- |
+| :------------------------- | -------: |
 | Python                     | 3.14     |
 
 ## 構築されるAWSリソースの数
@@ -52,7 +52,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 このテンプレートを実行することにより構築されるAWSリソースの数は、以下の表の通りです。
 
 | Environmtnt | Resource | Notice           |
-| ----------- | -------- | ---------------- |
+| :---------- | -------: | :--------------- |
 | develop     |      322 | N/A              |
 | staging     |      322 | N/A              |
 | production  |      322 | N/A              |
@@ -79,7 +79,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 `~/.aws/config`:
 
-```bash
+```bash:~/.aws/config
 [profile terraform-rag-template]
 region = ap-northeast-1
 output = json
@@ -90,7 +90,7 @@ mfa_serial=arn:aws:iam::{aws-account}:mfa/{mfa-device-name}
 
 `~/.aws/credentials`:
 
-```bash
+```bash:~/.aws/credentials
 [terraform-rag-template]
 aws_access_key_id = ********************
 aws_secret_access_key = ********************
@@ -104,7 +104,7 @@ aws_secret_access_key = ********************
 
 Terraformコマンドを実行する前に、AWS CLIやTerraform CLIなどの必要なツールをインストールしてください。また、`terraform.tf`で実装している`terraform.tfstate`ファイルはS3バックエンドで保管するという設定にしているため、事前に各環境のAWSアカウントに紐づくAWSマネージメントコンソールの、Amazon S3コンソール内で、
 
-```hcl
+```hcl:terraform.tf
 backend "s3" {
   bucket  = "example-profile-name"
   key     = "key/example-environment.terraform.tfstate
