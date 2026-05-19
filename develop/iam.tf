@@ -91,15 +91,15 @@ resource "aws_iam_role_policy_attachment" "github_actions_backup" {
 
 
 # ===============================================================================
-# AWS IAM for Request API Lambda
+# AWS IAM for AWS Lambda to Request API
 # ===============================================================================
 resource "aws_iam_role" "lambda_request_api" {
-  name               = "${local.project}-${local.env}-iam-lambda-request-api-role"
+  name               = "${local.project}-${local.env}-iam-lmd-request-api-role"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.lambda_request_api_assume.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-lambda-request-api-role"
+    Name = "${local.project}-${local.env}-iam-lmd-request-api-role"
   }
 }
 
@@ -120,11 +120,11 @@ data "aws_iam_policy_document" "lambda_request_api_assume" {
 }
 
 resource "aws_iam_policy" "lambda_request_api" {
-  name   = "${local.project}-${local.env}-iam-lambda-request-api-policy"
+  name   = "${local.project}-${local.env}-iam-lmd-request-api-policy"
   policy = data.aws_iam_policy_document.lambda_request_api.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-lambda-request-api-policy"
+    Name = "${local.project}-${local.env}-iam-lmd-request-api-policy"
   }
 }
 
@@ -150,15 +150,15 @@ resource "aws_iam_role_policy_attachment" "lambda_request_api" {
 
 
 # ===============================================================================
-# AWS IAM for Response API Lambda
+# AWS IAM for AWS Lambda to Response API
 # ===============================================================================
 resource "aws_iam_role" "lambda_response_api" {
-  name               = "${local.project}-${local.env}-iam-lambda-response-api-role"
+  name               = "${local.project}-${local.env}-iam-lmd-response-api-role"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.lambda_response_api_assume.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-lambda-response-api-role"
+    Name = "${local.project}-${local.env}-iam-lmd-response-api-role"
   }
 }
 
@@ -179,11 +179,11 @@ data "aws_iam_policy_document" "lambda_response_api_assume" {
 }
 
 resource "aws_iam_policy" "lambda_response_api" {
-  name   = "${local.project}-${local.env}-iam-lambda-response-api-policy"
+  name   = "${local.project}-${local.env}-iam-lmd-response-api-policy"
   policy = data.aws_iam_policy_document.lambda_response_api.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-lambda-response-api-policy"
+    Name = "${local.project}-${local.env}-iam-lmd-response-api-policy"
   }
 }
 
@@ -343,12 +343,12 @@ resource "aws_iam_role_policy_attachment" "amazon_data_firehose" {
 # AWS IAM for AWS Lambda (CloudWatch Error Alert)
 # ===============================================================================
 resource "aws_iam_role" "lambda_cloudwatch" {
-  name               = "${local.project}-${local.env}-iam-lambda-cw-logs-error-alert-role"
+  name               = "${local.project}-${local.env}-iam-lmd-cw-logs-error-alert-role"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.lambda_cloudwatch_assume.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-lambda-cw-logs-error-alert-role"
+    Name = "${local.project}-${local.env}-iam-lmd-cw-logs-error-alert-role"
   }
 }
 
@@ -369,11 +369,11 @@ data "aws_iam_policy_document" "lambda_cloudwatch_assume" {
 }
 
 resource "aws_iam_policy" "lambda_cloudwatch" {
-  name   = "${local.project}-${local.env}-iam-lambda-cw-logs-error-alert-policy"
+  name   = "${local.project}-${local.env}-iam-lmd-cw-logs-error-alert-policy"
   policy = data.aws_iam_policy_document.lambda_cloudwatch.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-lambda-cw-logs-error-alert-policy"
+    Name = "${local.project}-${local.env}-iam-lmd-cw-logs-error-alert-policy"
   }
 }
 
@@ -413,12 +413,12 @@ resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
 # AWS IAM for Amazon Bedrock Agent
 # ===============================================================================
 resource "aws_iam_role" "bedrock_agent" {
-  name               = "${local.project}-${local.env}-iam-bedrock-agent-role"
+  name               = "${local.project}-${local.env}-iam-brk-agent-role"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.bedrock_agent_assume.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-bedrock-agent-role"
+    Name = "${local.project}-${local.env}-iam-brk-agent-role"
   }
 }
 
@@ -455,11 +455,11 @@ data "aws_iam_policy_document" "bedrock_agent_assume" {
 }
 
 resource "aws_iam_policy" "bedrock_agent" {
-  name   = "${local.project}-${local.env}-iam-bedrock-agent-policy"
+  name   = "${local.project}-${local.env}-iam-brk-agent-policy"
   policy = data.aws_iam_policy_document.bedrock_agent.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-bedrock-agent-policy"
+    Name = "${local.project}-${local.env}-iam-brk-agent-policy"
   }
 }
 
@@ -511,11 +511,11 @@ resource "aws_iam_role_policy_attachment" "bedrock_agent" {
 # AWS IAM for Amazon Bedrock Knowledge base
 # ===============================================================================
 resource "aws_iam_role" "bedrock_knowledge_base" {
-  name               = "${local.project}-${local.env}-iam-bedrock-knowledge-base-role"
+  name               = "${local.project}-${local.env}-iam-brk-knowledge-base-role"
   assume_role_policy = data.aws_iam_policy_document.bedrock_knowledge_base_assume.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-bedrock-knowledge-base-role"
+    Name = "${local.project}-${local.env}-iam-brk-knowledge-base-role"
   }
 }
 
@@ -536,11 +536,11 @@ data "aws_iam_policy_document" "bedrock_knowledge_base_assume" {
 }
 
 resource "aws_iam_policy" "bedrock_knowledge_base" {
-  name   = "${local.project}-${local.env}-iam-bedrock-knowledge-base-policy"
+  name   = "${local.project}-${local.env}-iam-brk-knowledge-base-policy"
   policy = data.aws_iam_policy_document.bedrock_knowledge_base.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-bedrock-knowledge-base-policy"
+    Name = "${local.project}-${local.env}-iam-brk-knowledge-base-policy"
   }
 }
 
@@ -620,20 +620,20 @@ resource "aws_iam_role_policy_attachment" "bedrock_knowledge_base" {
 # Amazon EC2 Instance Profile for Bastion
 # ================================================================================
 resource "aws_iam_instance_profile" "bastion" {
-  name = "${local.project}-iam-bastion-profile"
+  name = "${local.project}-iam-ec2-bastion-profile"
   role = aws_iam_role.bastion.name
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-bastion-profile"
+    Name = "${local.project}-${local.env}-iam-ec2-bastion-profile"
   }
 }
 
 resource "aws_iam_role" "bastion" {
-  name               = "${local.project}-iam-bastion-role"
+  name               = "${local.project}-iam-ec2-bastion-role"
   assume_role_policy = data.aws_iam_policy_document.bastion_assume.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-bastion-role"
+    Name = "${local.project}-${local.env}-iam-ec2-bastion-role"
   }
 }
 
@@ -642,23 +642,23 @@ data "aws_iam_policy_document" "bastion_assume" {
     sid    = "EC2Assume"
     effect = "Allow"
     actions = [
-      "sts:AssumeRole"
+      "sts:AssumeRole",
     ]
     principals {
       type = "Service"
       identifiers = [
-        "ec2.amazonaws.com"
+        "ec2.amazonaws.com",
       ]
     }
   }
 }
 
 resource "aws_iam_policy" "bastion" {
-  name   = "${local.project}-iam-bastion-policy"
+  name   = "${local.project}-iam-ec2-bastion-policy"
   policy = data.aws_iam_policy_document.bastion.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-bastion-policy"
+    Name = "${local.project}-${local.env}-iam-ec2-bastion-policy"
   }
 }
 
@@ -671,7 +671,8 @@ data "aws_iam_policy_document" "bastion" {
     ]
     resources = [
       "${aws_s3_bucket.bastion.arn}/*",
-    aws_s3_bucket.bastion.arn, ]
+      aws_s3_bucket.bastion.arn,
+    ]
   }
 
   statement {

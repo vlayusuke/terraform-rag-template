@@ -76,7 +76,7 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_iam_db_auth_error_logs" 
 # ===============================================================================
 resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
   for_each    = local.lambda_functions
-  name        = "${local.project}-${local.env}-adf-lambda-${each.key}-logs-to-s3"
+  name        = "${local.project}-${local.env}-adf-lmd-${each.key}-logs-to-s3"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -94,7 +94,7 @@ resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-adf-lambda-${each.key}-logs-to-s3"
+    Name = "${local.project}-${local.env}-adf-lmd-${each.key}-logs-to-s3"
   }
 }
 
@@ -103,7 +103,7 @@ resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
 # Amazon Data Firehose Stream (Amazon Bedrock Knowledge Base logs)
 # ===============================================================================
 resource "aws_kinesis_firehose_delivery_stream" "bedrock_knowledge_base_logs" {
-  name        = "${local.project}-${local.env}-adf-bedrock-knowledge-base-logs-to-s3"
+  name        = "${local.project}-${local.env}-adf-brk-knowledge-base-logs-to-s3"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -111,7 +111,7 @@ resource "aws_kinesis_firehose_delivery_stream" "bedrock_knowledge_base_logs" {
     bucket_arn         = aws_s3_bucket.bedrock_logs.arn
     buffering_size     = 64
     buffering_interval = 300
-    prefix             = ""
+    prefix             = "/"
     compression_format = "GZIP"
   }
 
@@ -121,7 +121,7 @@ resource "aws_kinesis_firehose_delivery_stream" "bedrock_knowledge_base_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-adf-bedrock-knowledge-base-logs-to-s3"
+    Name = "${local.project}-${local.env}-adf-brk-knowledge-base-logs-to-s3"
   }
 }
 
@@ -157,7 +157,7 @@ resource "aws_kinesis_firehose_delivery_stream" "sns_logs" {
 # Amazon Data Firehose Stream (Amazon EC2 Bastion logs)
 # ===============================================================================
 resource "aws_kinesis_firehose_delivery_stream" "bastion_logs" {
-  name        = "${local.project}-${local.env}-adf-bastion-logs-to-s3"
+  name        = "${local.project}-${local.env}-adf-ec2-bastion-logs-to-s3"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -165,7 +165,7 @@ resource "aws_kinesis_firehose_delivery_stream" "bastion_logs" {
     bucket_arn         = aws_s3_bucket.bastion.arn
     buffering_size     = 64
     buffering_interval = 300
-    prefix             = "bastion-logs/"
+    prefix             = "ec2-bastion-logs/"
     compression_format = "GZIP"
   }
 
@@ -175,6 +175,6 @@ resource "aws_kinesis_firehose_delivery_stream" "bastion_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-adf-bastion-logs-to-s3"
+    Name = "${local.project}-${local.env}-adf-ec2-bastion-logs-to-s3"
   }
 }
