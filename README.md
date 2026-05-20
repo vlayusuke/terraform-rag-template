@@ -73,11 +73,11 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 #### プロファイルの設定
 
-構築に利用するAWSアカウントのプロファイルの設定を、 `~/.aws/config` と `~/.aws/credentials` に設定します。
+構築に利用するAWSアカウントのプロファイルの設定を、`~/.aws/config`と`~/.aws/credentials`に設定します。
 
-なお、IAMユーザーには多要素認証(MFA)の設定を必須化しているので、Terraform実行時にもMFAが適用されるように `mfa_serial` の値を設定しないと、Terraformの実行ができなくなるので、注意が必要です。
+なお、IAMユーザーには多要素認証(MFA)の設定を必須化しているので、Terraform実行時にもMFAが適用されるように`mfa_serial`の値を設定しないと、Terraformの実行ができなくなるので、注意が必要です。
 
-`~/.aws/config`:
+##### `~/.aws/config`
 
 ```bash:~/.aws/config
 [profile terraform-rag-template]
@@ -88,7 +88,7 @@ mfa_serial=arn:aws:iam::{aws-account}:mfa/{mfa-device-name}
 
 - {mfa-device-name}には、IAMコンソールのご自身のIAMユーザーの「多要素認証(MFA)」セクションに表示されている識別子の仮装MFAデバイス名を設定してください。
 
-`~/.aws/credentials`:
+##### `~/.aws/credentials`
 
 ```bash:~/.aws/credentials
 [terraform-rag-template]
@@ -124,7 +124,7 @@ backend "s3" {
 
 #### 複数のプラットフォームでTerraformコマンドを実行する際の注意点
 
-Terraformや各種Providerのアップデートを行なってから `terraform init -reconfigure` コマンドや `terraform init -upgrade` コマンドを実行した後に、macOSやWindowsなどの複数のプラットフォームで `.terraform.lock.hcl` に含まれるproviderのチェックサムがずれてしまうことを防止するため、 `terraform plan` コマンドを実行する前に、ターミナル上で以下のコマンドを実行してください。
+Terraformや各種Providerのバージョンのアップデートを行なってから`terraform init -reconfigure`コマンドや`terraform init -upgrade`コマンドを実行する際に、macOSやWindowsなどの複数のプラットフォーム間で`.terraform.lock.hcl`に含まれるproviderのチェックサムの値がずれてしまうことを防止するため、`terraform plan`コマンドを実行する前に、ターミナル上で以下のコマンドを実行してください。
 
 ```bash
 terraform providers lock \
