@@ -34,6 +34,7 @@ locals {
 # ================================================================================
 locals {
   rds_cluster_instance_count = 2
+  aurora_postgresql_version  = "15.10"
 
   # Postgres Role Name
   rds_postgres_role_name = "bedrock_role"

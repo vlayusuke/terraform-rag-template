@@ -10,35 +10,39 @@
 # https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/AuroraUserGuide/data-api.html
 # ================================================================================
 resource "aws_rds_cluster" "aurora_postgres" {
-  cluster_identifier = "${local.project}-${local.env}-aurora-serverless-cluster"
-  engine             = "aurora-postgresql"
-  engine_version     = "15.10"
-  engine_mode        = "provisioned"
-  availability_zones = local.availability_zones
-  database_name      = split("-", local.project)[0]
-  port               = 5432
-  master_username    = local.rds_postgres_role_name
-  kms_key_id         = aws_kms_key.aurora.arn
-  apply_immediately  = true
+  cluster_identifier                    = "${local.project}-${local.env}-aurora-serverless-cluster"
+  engine                                = "aurora-postgresql"
+  engine_version                        = local.aurora_postgresql_version
+  engine_mode                           = "provisioned"
+  availability_zones                    = local.availability_zones
+  database_name                         = split("-", local.project)[0]
+  port                                  = 5432
+  master_username                       = local.rds_postgres_role_name
+  kms_key_id                            = aws_kms_key.aurora.arn
+  enabled_cloudwatch_logs_exports       = local.enabled_cloudwatch_logs_exports_for_aurora
+  performance_insights_enabled          = true
+  performance_insights_retention_period = 7
+  performance_insights_kms_key_id       = aws_kms_key.aurora.arn
+  apply_immediately                     = true
 
   manage_master_user_password  = true
   deletion_protection          = false
   storage_encrypted            = true
   enable_http_endpoint         = true
   backup_retention_period      = 7
-  preferred_backup_window      = "07:00-09:00"
-  preferred_maintenance_window = "sun:09:00-sun:13:00"
+  preferred_backup_window      = "20:00-21:00"
+  preferred_maintenance_window = "sat:20:00-sat:21:00"
+
+  iam_roles = [
+    aws_iam_role.rds_iam_auth.arn,
+    aws_iam_role.rds_performance_insights.arn,
+  ]
 
   vpc_security_group_ids = [
     aws_security_group.rds.id,
   ]
 
   db_subnet_group_name = aws_db_subnet_group.aurora_postgres.name
-
-  enabled_cloudwatch_logs_exports       = local.enabled_cloudwatch_logs_exports_for_aurora
-  performance_insights_enabled          = true
-  performance_insights_retention_period = 7
-  performance_insights_kms_key_id       = aws_kms_key.aurora.arn
 
   serverlessv2_scaling_configuration {
     min_capacity = 0.5
