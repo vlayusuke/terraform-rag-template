@@ -585,10 +585,11 @@ data "aws_iam_policy_document" "bedrock_knowledge_base" {
     sid    = "RDSAccess"
     effect = "Allow"
     actions = [
-      "rds-data:BatchExecuteStatement",
-      "rds-data:ExecuteStatement",
       "rds:DescribeDBClusters",
       "rds:DescribeDBInstances",
+      "rds-db:connect",
+      "rds-data:BatchExecuteStatement",
+      "rds-data:ExecuteStatement",
     ]
     resources = [
       aws_rds_cluster.aurora_postgres.arn,
@@ -613,6 +614,121 @@ data "aws_iam_policy_document" "bedrock_knowledge_base" {
 resource "aws_iam_role_policy_attachment" "bedrock_knowledge_base" {
   role       = aws_iam_role.bedrock_knowledge_base.name
   policy_arn = aws_iam_policy.bedrock_knowledge_base.arn
+}
+
+
+# ================================================================================
+# AWS IAM for Amazon Aurora Serverless v2
+# ================================================================================
+resource "aws_iam_role" "rds_iam_auth" {
+  name               = "${local.project}-${local.env}-iam-rds-iam-auth-role"
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.rds_iam_auth_assume.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-rds-iam-auth-role"
+  }
+}
+
+data "aws_iam_policy_document" "rds_iam_auth_assume" {
+  statement {
+    sid    = "RDSAssume"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+    principals {
+      type = "Service"
+      identifiers = [
+        "rds.amazonaws.com",
+      ]
+    }
+  }
+}
+
+resource "aws_iam_policy" "rds_iam_auth" {
+  name   = "${local.project}-${local.env}-iam-rds-iam-auth-policy"
+  policy = data.aws_iam_policy_document.rds_iam_auth.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-rds-iam-auth-policy"
+  }
+}
+
+data "aws_iam_policy_document" "rds_iam_auth" {
+  statement {
+    sid    = "GetDataases"
+    effect = "Allow"
+    actions = [
+      "rds-db:connect",
+    ]
+    resources = [
+      "arn:aws:rds-db:${local.region}:${data.aws_caller_identity.current.account_id}:dbuser:${aws_rds_cluster.aurora_postgres.resource_id}/${local.rds_postgres_role_name}",
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "rds_iam_auth" {
+  role       = aws_iam_role.rds_iam_auth.name
+  policy_arn = aws_iam_policy.rds_iam_auth.arn
+}
+
+
+# ================================================================================
+# AWS IAM for Amazon Aurora Serverless v2 Performance Insights
+# ================================================================================
+resource "aws_iam_role" "rds_performance_insights" {
+  name               = "${local.project}-${local.env}-iam-rds-performance-insights-role"
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.rds_performance_insights_assume.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-rds-performance-insights-role"
+  }
+}
+
+data "aws_iam_policy_document" "rds_performance_insights_assume" {
+  statement {
+    sid    = "RDSPInsightsAssume"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+    principals {
+      type = "Service"
+      identifiers = [
+        "rds.amazonaws.com",
+      ]
+    }
+  }
+}
+
+resource "aws_iam_policy" "rds_performance_insights" {
+  name   = "${local.project}-${local.env}-iam-rds-performance-insights-policy"
+  policy = data.aws_iam_policy_document.rds_performance_insights.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-rds-performance-insights-policy"
+  }
+}
+
+data "aws_iam_policy_document" "rds_performance_insights" {
+  statement {
+    sid    = "GetPerformanceInsightsData"
+    effect = "Allow"
+    actions = [
+      "rds:DescribeDBInstances",
+      "rds:DescribeDBClusters",
+    ]
+    resources = [
+      "arn:aws:rds:${local.region}:${data.aws_caller_identity.current.account_id}:db:*",
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "rds_performance_insights" {
+  role       = aws_iam_role.rds_performance_insights.name
+  policy_arn = aws_iam_policy.rds_performance_insights.arn
 }
 
 
