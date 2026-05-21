@@ -17,6 +17,7 @@ resource "aws_rds_cluster" "aurora_postgres" {
   availability_zones                    = local.availability_zones
   database_name                         = split("-", local.project)[0]
   port                                  = 5432
+  iam_database_authentication_enabled   = true
   master_username                       = local.rds_postgres_role_name
   kms_key_id                            = aws_kms_key.aurora.arn
   enabled_cloudwatch_logs_exports       = local.enabled_cloudwatch_logs_exports_for_aurora
