@@ -663,7 +663,7 @@ data "aws_iam_policy_document" "rds_iam_auth" {
       "rds-db:connect",
     ]
     resources = [
-      "arn:aws:rds-db:${local.region}:${data.aws_caller_identity.current.account_id}:dbuser:${aws_rds_cluster.aurora_postgres.resource_id}/${local.rds_postgres_role_name}",
+      "arn:aws:rds-db:${local.region}:${data.aws_caller_identity.current.account_id}:dbuser:${aws_rds_cluster.aurora_postgres.cluster_identifier}/${local.rds_postgres_role_name}",
     ]
   }
 }
