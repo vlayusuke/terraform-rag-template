@@ -1,5 +1,5 @@
 # ===============================================================================
-# Amazon CloudWatch Log group for Aurora Serverless v2
+# Amazon CloudWatch Log group for Amazon Aurora Serverless v2
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "aurora_postgres" {
   for_each          = local.enabled_cloudwatch_logs_exports_for_aurora

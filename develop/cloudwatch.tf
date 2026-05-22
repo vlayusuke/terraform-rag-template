@@ -1,5 +1,5 @@
 # ===============================================================================
-# Amazon CloudWatch Log group for Aurora Serverless v2
+# Amazon CloudWatch Log group for Amazon Aurora Serverless v2
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "aurora_postgres" {
   for_each          = local.enabled_cloudwatch_logs_exports_for_aurora
@@ -36,7 +36,7 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_lambda" {
 
 
 # ===============================================================================
-# Amazon CloudWatch Log group for Bedrock Knowledge base
+# Amazon CloudWatch Log group for Amazon Bedrock Knowledge base
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "bedrock_knowledge_base" {
   for_each          = local.enabled_cloudwatch_logs_exports_for_bedrock
@@ -307,6 +307,34 @@ resource "aws_cloudwatch_metric_alarm" "bastion_memory_high" {
 
   tags = {
     Name = "${local.project}-${local.env}-cw-ec2-bastion-memory-high-alarm"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "bastion_disk_high" {
+  alarm_name          = "${local.project}-${local.env}-cw-ec2-bastion-disk-high-alarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 2
+  metric_name         = "DiskUtilization"
+  namespace           = "AWS/EC2"
+  period              = 60
+  statistic           = "Maximum"
+  threshold           = 80
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    InstanceId = aws_instance.ec2_bastion.id
+  }
+
+  alarm_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  ok_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  tags = {
+    Name = "${local.project}-${local.env}-cw-ec2-bastion-disk-high-alarm"
   }
 }
 
