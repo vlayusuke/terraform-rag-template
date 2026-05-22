@@ -37,7 +37,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 | Resources                  | Version  |
 | :------------------------- | -------: |
-| Terraform                  | 1.15.3   |
+| Terraform                  | 1.15.4   |
 | AWS Provider               | 6.46.0   |
 | AWS Cloud Control Provider | 1.85.0   |
 
@@ -53,9 +53,9 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 | Environmtnt | Resource | Notice           |
 | :---------- | -------: | :--------------- |
-| develop     |      322 | N/A              |
-| staging     |      322 | N/A              |
-| production  |      322 | N/A              |
+| develop     |      329 | N/A              |
+| staging     |      329 | N/A              |
+| production  |      329 | N/A              |
 
 ## 環境構築をする際の注意事項
 
