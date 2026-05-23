@@ -252,6 +252,87 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
 
 
 # ===============================================================================
+# Amazon CloudWatch Metrics for AWS Lambda
+# ===============================================================================
+resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
+  alarm_name          = "${local.project}-${local.env}-cw-lmd-errors-alarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 1
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 1
+  treat_missing_data  = "notBreaching"
+
+  alarm_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  ok_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  tags = {
+    Name = "${local.project}-${local.env}-cw-lmd-errors-alarm"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
+  alarm_name          = "${local.project}-${local.env}-cw-lmd-throttles-alarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 1
+  metric_name         = "Throttles"
+  namespace           = "AWS/Lambda"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 1
+  treat_missing_data  = "notBreaching"
+
+  alarm_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  ok_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  tags = {
+    Name = "${local.project}-${local.env}-cw-lmd-throttles-alarm"
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "lambda_concurrent_executions" {
+  alarm_name          = "${local.project}-${local.env}-cw-lmd-concurrent-executions-alarm"
+  comparison_operator = "GreaterThanOrEqualToThreshold"
+  evaluation_periods  = 1
+  metric_name         = "ConcurrentExecutions"
+  namespace           = "AWS/Lambda"
+  period              = 60
+  statistic           = "Maximum"
+  threshold           = data.aws_servicequotas_service_quota.lambda_concurrent_executions.value * 0.8
+  treat_missing_data  = "notBreaching"
+
+  alarm_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  ok_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  tags = {
+    Name = "${local.project}-${local.env}-cw-lmd-concurrent-executions-alarm"
+  }
+}
+
+data "aws_servicequotas_service_quota" "lambda_concurrent_executions" {
+  quota_name   = "Concurrent executions"
+  service_code = "lambda"
+}
+
+
+# ===============================================================================
 # Amazon CloudWatch Metrics for Amazon EC2 Bastion
 # ===============================================================================
 resource "aws_cloudwatch_metric_alarm" "bastion_cpu_high" {
