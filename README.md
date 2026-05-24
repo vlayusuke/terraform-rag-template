@@ -150,7 +150,17 @@ terraform providers lock \
 
 このテンプレートで構築が可能なアーキテクチャのインフラ構成図は以下の通りです。
 
-![インフラ構成図](terraform-rag-template-v1.0-en.svg)
+### 本番環境
+
+![本番環境](./terraform-rag-template-v1.1-en-prd.svg)
+
+### ステージング環境
+
+![ステージング環境](./terraform-rag-template-v1.1-en-stg.svg)
+
+### 開発環境
+
+![開発環境](./terraform-rag-template-v1.1-en-dev.svg)
 
 ## リリース履歴
 
