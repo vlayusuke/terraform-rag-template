@@ -53,9 +53,9 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 | Environmtnt | Resource | Notice           |
 | :---------- | -------: | :--------------- |
-| develop     |      329 | N/A              |
-| staging     |      329 | N/A              |
-| production  |      329 | N/A              |
+| develop     |      332 | N/A              |
+| staging     |      332 | N/A              |
+| production  |      332 | N/A              |
 | audit       |        0 | Each AWS account |
 
 ## 環境構築をする際の注意事項
@@ -120,7 +120,7 @@ backend "s3" {
 
 ```bash
 terraform init \
-  -backend-config="bucket=v-terraform-rag-template-aud-$(aws sts get-caller-identity --query Account --output text)" \
+  -backend-config="bucket=v-terraform-web-template-aud-$(aws sts get-caller-identity --profile terraform-template --query Account --output text)" \
   -backend-config="region=ap-northeast-1" \
   -backend-config="profile=terraform-template" \
   -backend-config="key=state/audit.terraform.tfstate"
