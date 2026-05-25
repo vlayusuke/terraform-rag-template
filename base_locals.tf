@@ -19,6 +19,7 @@ locals {
 
   # region
   region        = "ap-northeast-1"
+  dr_region     = "ap-northeast-3"
   global_region = "us-east-1"
 
   # availability zones
