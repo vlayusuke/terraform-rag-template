@@ -23,6 +23,65 @@ data "tls_certificate" "github" {
 
 
 # ===============================================================================
+# AWS IAM for GitHub Actions Deploy
+# ===============================================================================
+resource "aws_iam_role" "github_actions_deploy" {
+  name               = "${local.project}-${local.env}-iam-github-actions-deploy-role"
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.github_actions_deploy_assume.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-github-actions-deploy-role"
+  }
+}
+
+data "aws_iam_policy_document" "github_actions_deploy_assume" {
+  statement {
+    sid    = "OIDCFederate"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRoleWithWebIdentity",
+    ]
+    principals {
+      type = "Federated"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com",
+      ]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values = [
+        "repo:${local.repository_name}/*",
+      ]
+    }
+  }
+
+  statement {
+    sid    = "OIDCFederateRef"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRoleWithWebIdentity",
+    ]
+    principals {
+      type = "Federated"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com",
+      ]
+    }
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values = [
+        "repo:${local.repository_name}:ref:refs/heads/main",
+        "repo:${local.repository_name}:ref:refs/heads/*",
+      ]
+    }
+  }
+}
+
+
+# ===============================================================================
 # AWS IAM for Source Code Backup
 # ===============================================================================
 resource "aws_iam_role" "github_actions_backup" {
