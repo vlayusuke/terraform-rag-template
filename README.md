@@ -26,7 +26,7 @@ RAGを用いたWebアプリケーション向けのステージング環境を�
 
 RAGを用いたWebアプリケーション向けの開発環境を構築するためのAWSリソースを実装しています。
 
-## Terraform & 各種Provider & 各種runtimeのVersion
+## Terraform & 各種Provider & PythonのruntimeのVersion
 
 このテンプレートで使用している、Terraform、各種Provider及びPythonのruntimeのVersionは、以下の通りです。
 
@@ -37,7 +37,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 | Resources                  | Version  |
 | :------------------------- | -------: |
-| Terraform                  | 1.15.4   |
+| Terraform                  | 1.15.5   |
 | AWS Provider               | 6.47.0   |
 | AWS Cloud Control Provider | 1.86.0   |
 
