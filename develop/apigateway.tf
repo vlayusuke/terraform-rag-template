@@ -11,8 +11,8 @@ resource "aws_api_gateway_rest_api" "response_api" {
 }
 
 resource "aws_api_gateway_domain_name" "response_api" {
-  domain_name              = "${local.env}.${local.domain}"
-  regional_certificate_arn = aws_acm_certificate.main.arn
+  domain_name              = "*.${local.env}.${local.domain}"
+  regional_certificate_arn = aws_acm_certificate.main_agw.arn
   security_policy          = "TLS_1_2"
 
   endpoint_configuration {

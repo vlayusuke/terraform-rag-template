@@ -1,7 +1,7 @@
 # ===============================================================================
-# AWS Certificate Manager
+# AWS Certificate Manager for Amazon API Gateway
 # ===============================================================================
-resource "aws_acm_certificate" "main" {
+resource "aws_acm_certificate" "main_agw" {
   domain_name       = "${local.env}.${local.domain}"
   validation_method = "DNS"
 
@@ -14,16 +14,16 @@ resource "aws_acm_certificate" "main" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-acm-certificate"
+    Name = "${local.project}-${local.env}-acm-certificate-agw"
   }
 }
 
-resource "aws_route53_record" "main" {
+resource "aws_route53_record" "main_agw" {
   for_each = {
-    for dvo in aws_acm_certificate.main.domain_validation_options : dvo.domain_name => {
-      name   = dvo.resource_record_name
-      record = dvo.resource_record_value
-      type   = dvo.resource_record_type
+    for dvoagw in aws_acm_certificate.main_agw.domain_validation_options : dvoagw.domain_name => {
+      name   = dvoagw.resource_record_name
+      record = dvoagw.resource_record_value
+      type   = dvoagw.resource_record_type
     }
   }
 
@@ -38,11 +38,11 @@ resource "aws_route53_record" "main" {
   ]
 }
 
-resource "aws_acm_certificate_validation" "main" {
-  certificate_arn = aws_acm_certificate.main.arn
+resource "aws_acm_certificate_validation" "main_agw" {
+  certificate_arn = aws_acm_certificate.main_agw.arn
 
   validation_record_fqdns = [
-    for record in aws_route53_record.main :
+    for record in aws_route53_record.main_agw :
     record.fqdn
   ]
 }
