@@ -88,7 +88,7 @@ resource "aws_cloudfront_distribution" "main" {
   }
 
   depends_on = [
-    aws_acm_certificate_validation.main,
+    aws_acm_certificate_validation.main_cloudfront,
   ]
 
   tags = {
