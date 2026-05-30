@@ -98,6 +98,7 @@ data "aws_iam_policy_document" "application_kms_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/${local.iam_infra_group}",
       ]
     }
   }
@@ -160,6 +161,7 @@ data "aws_iam_policy_document" "aurora_kms_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/${local.iam_infra_group}",
       ]
     }
   }
@@ -222,6 +224,7 @@ data "aws_iam_policy_document" "ebs_kms_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/${local.iam_infra_group}",
       ]
     }
   }
