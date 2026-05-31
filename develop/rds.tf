@@ -20,7 +20,7 @@ resource "aws_rds_cluster" "aurora_postgres" {
   iam_database_authentication_enabled   = true
   master_username                       = local.rds_postgres_role_name
   kms_key_id                            = aws_kms_key.aurora.arn
-  enabled_cloudwatch_logs_exports       = local.enabled_cloudwatch_logs_exports_for_aurora
+  enabled_cloudwatch_logs_exports       = tolist(local.aurora_cloudwatch_log_group)
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
   performance_insights_kms_key_id       = aws_kms_key.aurora.arn
@@ -132,6 +132,31 @@ resource "terraform_data" "setup_vector_database" {
   triggers_replace = [
     aws_rds_cluster.aurora_postgres.id,
   ]
+
+  # Wait for Data API to be reachable on the writer (retries until success)
+  provisioner "local-exec" {
+    command = <<-EOT
+      bash -c 'set -e
+      attempts=0
+      max=60
+      until aws rds-data --region "$REGION" execute-statement --resource-arn "$CLUSTER_ARN" --secret-arn "$SECRET_ARN" --database "$DATABASE_NAME" --sql "SELECT 1" >/dev/null 2>&1 || [ $attempts -ge $max ]; do
+        attempts=$((attempts+1))
+        echo "Waiting for Data API (attempt $attempts/$max)..."
+        sleep 5
+      done
+      if [ $attempts -ge $max ]; then
+        echo "Timed out waiting for Data API" >&2
+        exit 1
+      fi
+      '
+    EOT
+    environment = {
+      REGION        = local.region
+      CLUSTER_ARN   = aws_rds_cluster.aurora_postgres.arn
+      SECRET_ARN    = aws_rds_cluster.aurora_postgres.master_user_secret[0].secret_arn
+      DATABASE_NAME = aws_rds_cluster.aurora_postgres.database_name
+    }
+  }
 
   # https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.VectorDB.html
   # Install pgvector and check the version
