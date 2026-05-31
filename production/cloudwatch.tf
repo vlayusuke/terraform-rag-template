@@ -2,7 +2,7 @@
 # Amazon CloudWatch Log group for Amazon Aurora Serverless v2
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "aurora_postgres" {
-  for_each          = local.enabled_cloudwatch_logs_exports_for_aurora
+  for_each          = local.aurora_cloudwatch_log_group
   name              = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-cwlog"
   retention_in_days = local.retention_in_days
 
@@ -12,13 +12,13 @@ resource "aws_cloudwatch_log_group" "aurora_postgres" {
 }
 
 resource "aws_cloudwatch_log_stream" "aurora_postgres" {
-  for_each       = local.enabled_cloudwatch_logs_exports_for_aurora
+  for_each       = local.aurora_cloudwatch_log_group
   name           = "${local.project}-${local.env}-cw-rds-${each.key}-cwstream"
   log_group_name = aws_cloudwatch_log_group.aurora_postgres[each.key].name
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_firehose" {
-  for_each        = local.enabled_cloudwatch_logs_exports_for_aurora
+  for_each        = local.aurora_cloudwatch_log_group
   name            = "${local.project}-${local.env}-cw-rds-${each.key}-to-firehose"
   log_group_name  = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-to-adf"
   filter_pattern  = "?Warning ?Error"
@@ -27,7 +27,7 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_firehose" 
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_lambda" {
-  for_each        = local.enabled_cloudwatch_logs_exports_for_aurora
+  for_each        = local.aurora_cloudwatch_log_group
   name            = "${local.project}-${local.env}-cw-rds-${each.key}-to-lmd"
   log_group_name  = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-to-lmd"
   filter_pattern  = "?Warning ?Error"
@@ -39,7 +39,7 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_lambda" {
 # Amazon CloudWatch Log group for Amazon Bedrock Knowledge base
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "bedrock_knowledge_base" {
-  for_each          = local.enabled_cloudwatch_logs_exports_for_bedrock
+  for_each          = local.aurora_cloudwatch_log_group_for_bedrock
   name              = "/aws/bedrock/knowledge-bases/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-cwlog"
   retention_in_days = local.retention_in_days
 
@@ -49,7 +49,7 @@ resource "aws_cloudwatch_log_group" "bedrock_knowledge_base" {
 }
 
 resource "aws_cloudwatch_log_stream" "bedrock_knowledge_base" {
-  for_each       = local.enabled_cloudwatch_logs_exports_for_bedrock
+  for_each       = local.aurora_cloudwatch_log_group_for_bedrock
   name           = "${local.project}-${local.env}-cw-brk-knowledge-base-${each.key}-cwstream"
   log_group_name = aws_cloudwatch_log_group.bedrock_knowledge_base[each.key].name
 }
