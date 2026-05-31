@@ -57,7 +57,7 @@ locals {
 
 
 # ================================================================================
-# Amazon CloudWatch Logs
+# Amazon CloudWatch
 # ================================================================================
 locals {
   retention_in_days = 180
@@ -69,15 +69,19 @@ locals {
     aws_lambda_function.lambda_metric_alarm.function_name,
   ])
 
-  aurora_cloudwatch_log_group = toset([
+  enabled_cloudwatch_logs_exports_for_aurora = toset([
     "instance",
     "postgresql",
     "iam-db-auth-error",
   ])
 
-  aurora_cloudwatch_log_group_for_bedrock = toset([
+  aurora_log_types = aws_kinesis_firehose_delivery_stream.aurora_postgresql_logs.arn
+
+  enabled_cloudwatch_logs_exports_for_bedrock = toset([
     "knowledge-base",
   ])
+
+  bedrock_log_types = aws_kinesis_firehose_delivery_stream.bedrock_knowledge_base_logs.arn
 }
 
 

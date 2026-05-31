@@ -20,7 +20,7 @@ resource "aws_rds_cluster" "aurora_postgres" {
   iam_database_authentication_enabled   = true
   master_username                       = local.rds_postgres_role_name
   kms_key_id                            = aws_kms_key.aurora.arn
-  enabled_cloudwatch_logs_exports       = local.aurora_cloudwatch_log_group
+  enabled_cloudwatch_logs_exports       = local.enabled_cloudwatch_logs_exports_for_aurora
   performance_insights_enabled          = true
   performance_insights_retention_period = 7
   performance_insights_kms_key_id       = aws_kms_key.aurora.arn
