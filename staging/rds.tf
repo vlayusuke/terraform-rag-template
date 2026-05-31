@@ -133,6 +133,17 @@ resource "terraform_data" "setup_vector_database" {
     aws_rds_cluster.aurora_postgres.id,
   ]
 
+  # Wait for Data API to be reachable on the writer (retries until success)
+  provisioner "local-exec" {
+    command = "bash ./src/rds_setting_scripts/00_wait_for_data_api.sh"
+    environment = {
+      REGION        = local.region
+      CLUSTER_ARN   = aws_rds_cluster.aurora_postgres.arn
+      SECRET_ARN    = aws_rds_cluster.aurora_postgres.master_user_secret[0].secret_arn
+      DATABASE_NAME = aws_rds_cluster.aurora_postgres.database_name
+    }
+  }
+
   # https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.VectorDB.html
   # Install pgvector and check the version
   provisioner "local-exec" {
