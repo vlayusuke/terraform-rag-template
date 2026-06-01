@@ -18,11 +18,11 @@ resource "aws_cloudwatch_log_stream" "aurora_postgres" {
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_firehose" {
-  for_each        = local.aurora_cloudwatch_log_group
+  for_each        = local.aurora_adf_stream_arns
   name            = "${local.project}-${local.env}-cw-rds-${each.key}-to-firehose"
   log_group_name  = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-to-adf"
   filter_pattern  = "?Warning ?Error"
-  destination_arn = aws_kinesis_firehose_delivery_stream.aurora_postgresql_logs.arn
+  destination_arn = each.value
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
 
