@@ -78,6 +78,12 @@ locals {
   aurora_cloudwatch_log_group_for_bedrock = toset([
     "knowledge-base",
   ])
+
+  aurora_adf_stream_arns = {
+    "postgresql"        = aws_kinesis_firehose_delivery_stream.aurora_postgresql_logs.arn,
+    "instance"          = aws_kinesis_firehose_delivery_stream.aurora_instance_logs.arn,
+    "iam-db-auth-error" = aws_kinesis_firehose_delivery_stream.aurora_iam_db_auth_error_logs.arn,
+  }
 }
 
 
