@@ -36,37 +36,37 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_lambda" {
 
 
 # ===============================================================================
-# Amazon CloudWatch Log group for Amazon Bedrock Knowledge base
+# Amazon CloudWatch Log group for Amazon Bedrock
 # ===============================================================================
-resource "aws_cloudwatch_log_group" "bedrock_knowledge_base" {
-  for_each          = local.aurora_cloudwatch_log_group_for_bedrock
-  name              = "/aws/bedrock/knowledge-bases/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-cwlog"
+resource "aws_cloudwatch_log_group" "bedrock" {
+  for_each          = local.bedrock_cloudwatch_log_group
+  name              = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-cwlog"
   retention_in_days = local.retention_in_days
 
   tags = {
-    Name = "/aws/bedrock/knowledge-bases/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-cwlog"
+    Name = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-cwlog"
   }
 }
 
-resource "aws_cloudwatch_log_stream" "bedrock_knowledge_base" {
-  for_each       = local.aurora_cloudwatch_log_group_for_bedrock
-  name           = "${local.project}-${local.env}-cw-brk-knowledge-base-${each.key}-cwstream"
-  log_group_name = aws_cloudwatch_log_group.bedrock_knowledge_base[each.key].name
+resource "aws_cloudwatch_log_stream" "bedrock" {
+  for_each       = local.bedrock_cloudwatch_log_group
+  name           = "${local.project}-${local.env}-cw-${each.key}-cwstream"
+  log_group_name = aws_cloudwatch_log_group.bedrock[each.key].name
 }
 
-resource "aws_cloudwatch_log_subscription_filter" "bedrock_knowledge_base_to_firehose" {
-  for_each        = local.aurora_cloudwatch_log_group_for_bedrock
-  name            = "${local.project}-${local.env}-cw-brk-knowledge-base-to-firehose"
-  log_group_name  = "/aws/bedrock/knowledge-bases/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-adf"
+resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_firehose" {
+  for_each        = local.bedrock_cloudwatch_log_group
+  name            = "${local.project}-${local.env}-cw-${each.key}-to-firehose"
+  log_group_name  = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-adf"
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_kinesis_firehose_delivery_stream.bedrock_knowledge_base_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
 
-resource "aws_cloudwatch_log_subscription_filter" "bedrock_knowledge_base_to_lambda" {
-  for_each        = local.aurora_cloudwatch_log_group_for_bedrock
-  name            = "${local.project}-${local.env}-cw-brk-knowledge-base-to-lmd"
-  log_group_name  = "/aws/bedrock/knowledge-bases/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-lmd"
+resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_lambda" {
+  for_each        = local.bedrock_cloudwatch_log_group
+  name            = "${local.project}-${local.env}-cw-${each.key}-to-lmd"
+  log_group_name  = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-lmd"
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
 }
