@@ -100,10 +100,11 @@ resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
 
 
 # ===============================================================================
-# Amazon Data Firehose Stream (Amazon Bedrock Knowledge Base logs)
+# Amazon Data Firehose Stream (Amazon Bedrock logs)
 # ===============================================================================
-resource "aws_kinesis_firehose_delivery_stream" "bedrock_knowledge_base_logs" {
-  name        = "${local.project}-${local.env}-adf-brk-knowledge-base-logs-to-s3"
+resource "aws_kinesis_firehose_delivery_stream" "bedrock_logs" {
+  for_each    = local.bedrock_cloudwatch_log_group
+  name        = "${local.project}-${local.env}-adf-${each.key}-logs-to-s3"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -111,7 +112,7 @@ resource "aws_kinesis_firehose_delivery_stream" "bedrock_knowledge_base_logs" {
     bucket_arn         = aws_s3_bucket.bedrock_logs.arn
     buffering_size     = 64
     buffering_interval = 300
-    prefix             = "/"
+    prefix             = "${each.key}/"
     compression_format = "GZIP"
   }
 
@@ -121,7 +122,7 @@ resource "aws_kinesis_firehose_delivery_stream" "bedrock_knowledge_base_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-adf-brk-knowledge-base-logs-to-s3"
+    Name = "${local.project}-${local.env}-adf-${each.key}-logs-to-s3"
   }
 }
 
