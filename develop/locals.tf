@@ -75,7 +75,7 @@ locals {
     "iam-db-auth-error",
   ])
 
-  aurora_cloudwatch_log_group_for_bedrock = toset([
+  bedrock_cloudwatch_log_group = toset([
     "knowledge-base",
   ])
 
