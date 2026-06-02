@@ -59,7 +59,7 @@ resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_firehose" {
   name            = "${local.project}-${local.env}-cw-${each.key}-to-firehose"
   log_group_name  = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-adf"
   filter_pattern  = "?Warning ?Error"
-  destination_arn = aws_kinesis_firehose_delivery_stream.bedrock_knowledge_base_logs.arn
+  destination_arn = aws_kinesis_firehose_delivery_stream.bedrock_logs[each.key].arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
 
