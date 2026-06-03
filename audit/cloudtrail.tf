@@ -50,7 +50,7 @@ resource "aws_cloudtrail" "audit_osaka" {
   is_multi_region_trail         = false
   kms_key_id                    = aws_kms_key.cloudtrail.arn
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail.arn
-  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail_osaka.arn}:*"
   sns_topic_name                = aws_sns_topic.event_notifications_audit.name
 
   event_selector {
@@ -89,7 +89,7 @@ resource "aws_cloudtrail" "audit_global" {
   is_multi_region_trail         = false
   kms_key_id                    = aws_kms_key.cloudtrail.arn
   cloud_watch_logs_role_arn     = aws_iam_role.cloudtrail.arn
-  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail.arn}:*"
+  cloud_watch_logs_group_arn    = "${aws_cloudwatch_log_group.cloudtrail_global.arn}:*"
   sns_topic_name                = aws_sns_topic.event_notifications_audit.name
 
   event_selector {
