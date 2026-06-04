@@ -38,8 +38,8 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 | Resources                  | Version  |
 | :------------------------- | -------: |
 | Terraform                  | 1.15.5   |
-| AWS Provider               | 6.47.0   |
-| AWS Cloud Control Provider | 1.86.0   |
+| AWS Provider               | 6.48.0   |
+| AWS Cloud Control Provider | 1.87.0   |
 
 ### AWS Lambda関数に使用しているPythonのruntime
 
