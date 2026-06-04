@@ -56,7 +56,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 | develop     |      336 | N/A              |
 | staging     |      336 | N/A              |
 | production  |      336 | N/A              |
-| audit       |      163 | Each AWS account |
+| audit       |      180 | Each AWS account |
 
 ## 環境構築をする際の注意事項
 
@@ -171,6 +171,10 @@ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_terraform-rag-template -C "Key Pair f
 ### 開発環境
 
 ![開発環境](./terraform-rag-template-v1.2-en-dev.svg)
+
+## コスト
+
+本テンプレートのすべての環境を構築した場合のコスト内訳は、以下のドキュメントを参照してください。
 
 ## リリース履歴
 
