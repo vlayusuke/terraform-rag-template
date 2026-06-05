@@ -176,6 +176,8 @@ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_terraform-rag-template -C "Key Pair f
 
 本テンプレートのすべての環境を構築した場合のコスト内訳は、以下のドキュメントを参照してください。
 
+[AWS Cost Estimation for terraform-rag-template](./aws-cost-estimation.md)
+
 ## リリース履歴
 
 本テンプレートのリリース履歴は、[Releases](https://github.com/vlayusuke/terraform-rag-template/releases)を参照してください。
