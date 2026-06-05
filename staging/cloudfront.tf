@@ -92,7 +92,7 @@ resource "aws_cloudfront_distribution" "main" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cloudfront-distribution"
+    Name = "${local.project}-${local.env}-cf-distribution"
   }
 }
 
@@ -112,7 +112,7 @@ resource "aws_cloudfront_function" "basic_auth" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cloudfront-function-basic-auth"
+    Name = "${local.project}-${local.env}-cf-fnc-basic-auth"
   }
 }
 
