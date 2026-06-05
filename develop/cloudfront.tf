@@ -110,6 +110,10 @@ resource "aws_cloudfront_function" "basic_auth" {
   key_value_store_associations = [
     aws_cloudfront_key_value_store.basic_auth.id,
   ]
+
+  tags = {
+    Name = "${local.project}-${local.env}-cloudfront-function-basic-auth"
+  }
 }
 
 
