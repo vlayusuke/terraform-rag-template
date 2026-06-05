@@ -56,7 +56,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 | develop     |      336 | N/A              |
 | staging     |      336 | N/A              |
 | production  |      336 | N/A              |
-| audit       |      180 | Each AWS account |
+| audit       |      178 | Each AWS account |
 
 ## 環境構築をする際の注意事項
 
