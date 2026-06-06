@@ -91,7 +91,7 @@ locals {
 # Amazon Bedrock Models
 # ================================================================================
 locals {
-  bedrock_foundation_model     = "anthropic.claude-sonnet-4-5-20250929-v1:0"
+  bedrock_foundation_model     = "global.anthropic.claude-opus-4-7:0"
   bedrock_knowledge_base_model = "amazon.titan-embed-text-v2:0"
 }
 
