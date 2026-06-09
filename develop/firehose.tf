@@ -2,7 +2,7 @@
 # Amazon Data Firehose Stream (Amazon Aurora logs)
 # ===============================================================================
 resource "aws_kinesis_firehose_delivery_stream" "aurora_postgresql_logs" {
-  name        = "${local.project}-${local.env}-adf-aurora-postgresql-logs-to-s3"
+  name        = "${local.project}-${local.env}-adf-aur-postgresql-logs-to-s3"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -20,12 +20,12 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_postgresql_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-adf-aurora-postgresql-logs-to-s3"
+    Name = "${local.project}-${local.env}-adf-aur-postgresql-logs-to-s3"
   }
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "aurora_instance_logs" {
-  name        = "${local.project}-${local.env}-adf-aurora-instance-logs-to-s3"
+  name        = "${local.project}-${local.env}-adf-aur-instance-logs-to-s3"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -43,12 +43,12 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_instance_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-adf-aurora-instance-logs-to-s3"
+    Name = "${local.project}-${local.env}-adf-aur-instance-logs-to-s3"
   }
 }
 
 resource "aws_kinesis_firehose_delivery_stream" "aurora_iam_db_auth_error_logs" {
-  name        = "${local.project}-${local.env}-adf-aurora-iam-db-auth-error-logs-to-s3"
+  name        = "${local.project}-${local.env}-adf-aur-iam-db-auth-error-logs-to-s3"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -66,7 +66,7 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_iam_db_auth_error_logs" 
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-adf-aurora-iam-db-auth-error-logs-to-s3"
+    Name = "${local.project}-${local.env}-adf-aur-iam-db-auth-error-logs-to-s3"
   }
 }
 
@@ -104,7 +104,7 @@ resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
 # ===============================================================================
 resource "aws_kinesis_firehose_delivery_stream" "bedrock_logs" {
   for_each    = local.bedrock_cloudwatch_log_group
-  name        = "${local.project}-${local.env}-adf-${each.key}-logs-to-s3"
+  name        = "${local.project}-${local.env}-adf-brk-${each.key}-logs-to-s3"
   destination = "extended_s3"
 
   extended_s3_configuration {
@@ -122,7 +122,7 @@ resource "aws_kinesis_firehose_delivery_stream" "bedrock_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-adf-${each.key}-logs-to-s3"
+    Name = "${local.project}-${local.env}-adf-brk-${each.key}-logs-to-s3"
   }
 }
 
@@ -157,7 +157,7 @@ resource "aws_kinesis_firehose_delivery_stream" "sns_logs" {
 # ===============================================================================
 # Amazon Data Firehose Stream (Amazon EC2 Bastion logs)
 # ===============================================================================
-resource "aws_kinesis_firehose_delivery_stream" "bastion_logs" {
+resource "aws_kinesis_firehose_delivery_stream" "ec2_bastion_logs" {
   name        = "${local.project}-${local.env}-adf-ec2-bastion-logs-to-s3"
   destination = "extended_s3"
 
