@@ -300,11 +300,11 @@ resource "aws_iam_role_policy_attachment" "lambda_response_api" {
 # AWS IAM for Amazon Data Firehose
 # ===============================================================================
 resource "aws_iam_role" "amazon_data_firehose" {
-  name               = "${local.project}-${local.env}-iam-amazon-data-firehose-role"
+  name               = "${local.project}-${local.env}-iam-adf-role"
   assume_role_policy = data.aws_iam_policy_document.amazon_data_firehose_assume.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-amazon-data-firehose-role"
+    Name = "${local.project}-${local.env}-iam-adf-role"
   }
 }
 
@@ -325,12 +325,12 @@ data "aws_iam_policy_document" "amazon_data_firehose_assume" {
 }
 
 resource "aws_iam_policy" "amazon_data_firehose" {
-  name   = "${local.project}-${local.env}-iam-amazon-data-firehose-policy"
+  name   = "${local.project}-${local.env}-iam-adf-policy"
   path   = "/"
   policy = data.aws_iam_policy_document.amazon_data_firehose.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-amazon-data-firehose-policy"
+    Name = "${local.project}-${local.env}-iam-adf-policy"
   }
 }
 
@@ -354,6 +354,8 @@ data "aws_iam_policy_document" "amazon_data_firehose" {
       "${aws_s3_bucket.lambda_logs.arn}/*",
       aws_s3_bucket.sns_logs.arn,
       "${aws_s3_bucket.sns_logs.arn}/*",
+      aws_s3_bucket.bastion_logs.arn,
+      "${aws_s3_bucket.bastion_logs.arn}/*",
     ]
   }
 
@@ -386,8 +388,8 @@ data "aws_iam_policy_document" "amazon_data_firehose" {
       "${aws_cloudwatch_log_stream.sns.arn}:*",
       aws_cloudwatch_log_stream.adf.arn,
       "${aws_cloudwatch_log_stream.adf.arn}:*",
-      aws_cloudwatch_log_stream.bastion.arn,
-      "${aws_cloudwatch_log_stream.bastion.arn}:*",
+      aws_cloudwatch_log_stream.ec2_bastion.arn,
+      "${aws_cloudwatch_log_stream.ec2_bastion.arn}:*",
     ]
   }
 }
@@ -402,12 +404,12 @@ resource "aws_iam_role_policy_attachment" "amazon_data_firehose" {
 # AWS IAM for AWS Lambda (CloudWatch Error Alert)
 # ===============================================================================
 resource "aws_iam_role" "lambda_cloudwatch" {
-  name               = "${local.project}-${local.env}-iam-lmd-cw-logs-error-alert-role"
+  name               = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-role"
   path               = "/"
   assume_role_policy = data.aws_iam_policy_document.lambda_cloudwatch_assume.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-lmd-cw-logs-error-alert-role"
+    Name = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-role"
   }
 }
 
@@ -428,11 +430,11 @@ data "aws_iam_policy_document" "lambda_cloudwatch_assume" {
 }
 
 resource "aws_iam_policy" "lambda_cloudwatch" {
-  name   = "${local.project}-${local.env}-iam-lmd-cw-logs-error-alert-policy"
+  name   = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-policy"
   policy = data.aws_iam_policy_document.lambda_cloudwatch.json
 
   tags = {
-    Name = "${local.project}-${local.env}-iam-lmd-cw-logs-error-alert-policy"
+    Name = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-policy"
   }
 }
 
@@ -859,8 +861,8 @@ data "aws_iam_policy_document" "bastion" {
       "logs:DescribeLogStreams",
     ]
     resources = [
-      aws_cloudwatch_log_group.bastion.arn,
-      "${aws_cloudwatch_log_group.bastion.arn}:log-stream:*",
+      aws_cloudwatch_log_group.ec2_bastion.arn,
+      "${aws_cloudwatch_log_group.ec2_bastion.arn}:log-stream:*",
     ]
   }
 
@@ -959,7 +961,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_to_amazon_data_firehose" {
       aws_cloudwatch_log_group.lambda_function[aws_lambda_function.lambda_metric_alarm.function_name].arn,
       aws_cloudwatch_log_group.bedrock["knowledge-base"].arn,
       aws_cloudwatch_log_group.sns.arn,
-      aws_cloudwatch_log_group.bastion.arn,
+      aws_cloudwatch_log_group.ec2_bastion.arn,
       aws_cloudwatch_log_group.adf.arn,
     ]
   }
@@ -1356,8 +1358,8 @@ data "aws_iam_policy_document" "enforce_mfa" {
       "s3:PutObject",
     ]
     resources = [
-      "arn:aws:s3:::terraform-rag-template",
-      "arn:aws:s3:::terraform-rag-template/*",
+      "arn:aws:s3:::v-terraform-rag-template-${local.env}",
+      "arn:aws:s3:::v-terraform-rag-template-${local.env}/*",
     ]
   }
 }
