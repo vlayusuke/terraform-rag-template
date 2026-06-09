@@ -16,13 +16,13 @@ resource "aws_kms_key" "application" {
 # AWS KMS for Amazon Aurora Serverless v2
 # ===============================================================================
 resource "aws_kms_key" "aurora" {
-  description             = "${local.project}-${local.env}-kms-aurora-key"
+  description             = "${local.project}-${local.env}-kms-aur-key"
   enable_key_rotation     = true
   key_usage               = "ENCRYPT_DECRYPT"
   deletion_window_in_days = 7
 
   tags = {
-    Name = "${local.project}-${local.env}-kms-aurora-key"
+    Name = "${local.project}-${local.env}-kms-aur-key"
   }
 }
 
