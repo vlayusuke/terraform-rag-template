@@ -149,7 +149,7 @@ resource "aws_bedrockagent_prompt" "bedrock_prompt" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-brk-action-group-prompt"
+    Name = "${local.project}-${local.env}-brk-api-prompt"
   }
 }
 
