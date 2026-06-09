@@ -92,7 +92,7 @@ resource "aws_cloudfront_distribution" "main" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cf-distribution"
+    Name = "${local.project}-${local.env}-cft-distribution"
   }
 }
 
@@ -101,7 +101,7 @@ resource "aws_cloudfront_distribution" "main" {
 # CloudFront Functions
 # ===============================================================================
 resource "aws_cloudfront_function" "basic_auth" {
-  name    = "${local.project}-${local.env}-cf-fnc-basic-auth"
+  name    = "${local.project}-${local.env}-cft-fnc-basic-auth"
   runtime = "cloudfront-js-2.0"
   comment = "${local.project}-${local.env} CloudFront Functions for basic authentication"
   publish = true
@@ -112,7 +112,7 @@ resource "aws_cloudfront_function" "basic_auth" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cf-fnc-basic-auth"
+    Name = "${local.project}-${local.env}-cft-fnc-basic-auth"
   }
 }
 
@@ -121,7 +121,7 @@ resource "aws_cloudfront_function" "basic_auth" {
 # CloudFront Key-Value Store
 # ===============================================================================
 resource "aws_cloudfront_key_value_store" "basic_auth" {
-  name    = "${local.project}-${local.env}-cf-kvs-basic-auth"
+  name    = "${local.project}-${local.env}-cft-kvs-basic-auth"
   comment = "${local.project}-${local.env} CloudFront Key-Value Store for basic authentication"
 }
 
