@@ -3,23 +3,23 @@
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "aurora_postgres" {
   for_each          = local.aurora_cloudwatch_log_group
-  name              = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-cwlog"
+  name              = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-cwtlog"
   retention_in_days = local.retention_in_days
 
   tags = {
-    Name = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-cwlog"
+    Name = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-cwtlog"
   }
 }
 
 resource "aws_cloudwatch_log_stream" "aurora_postgres" {
   for_each       = local.aurora_cloudwatch_log_group
-  name           = "${local.project}-${local.env}-cw-rds-${each.key}-cwstream"
+  name           = "${local.project}-${local.env}-cw-rds-${each.key}-cwtstream"
   log_group_name = aws_cloudwatch_log_group.aurora_postgres[each.key].name
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_firehose" {
   for_each        = local.aurora_adf_stream_arns
-  name            = "${local.project}-${local.env}-cw-rds-${each.key}-to-firehose"
+  name            = "${local.project}-${local.env}-cwt-rds-${each.key}-to-adf"
   log_group_name  = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-to-adf"
   filter_pattern  = "?Warning ?Error"
   destination_arn = each.value
@@ -28,7 +28,7 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_firehose" 
 
 resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_lambda" {
   for_each        = local.aurora_cloudwatch_log_group
-  name            = "${local.project}-${local.env}-cw-rds-${each.key}-to-lmd"
+  name            = "${local.project}-${local.env}-cwt-rds-${each.key}-to-lmd"
   log_group_name  = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-to-lmd"
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
@@ -50,13 +50,13 @@ resource "aws_cloudwatch_log_group" "bedrock" {
 
 resource "aws_cloudwatch_log_stream" "bedrock" {
   for_each       = local.bedrock_cloudwatch_log_group
-  name           = "${local.project}-${local.env}-cw-${each.key}-cwstream"
+  name           = "${local.project}-${local.env}-cwt-${each.key}-cwtstream"
   log_group_name = aws_cloudwatch_log_group.bedrock[each.key].name
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_firehose" {
   for_each        = local.bedrock_cloudwatch_log_group
-  name            = "${local.project}-${local.env}-cw-${each.key}-to-firehose"
+  name            = "${local.project}-${local.env}-cwt-${each.key}-to-adf"
   log_group_name  = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-adf"
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_kinesis_firehose_delivery_stream.bedrock_logs[each.key].arn
@@ -65,7 +65,7 @@ resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_firehose" {
 
 resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_lambda" {
   for_each        = local.bedrock_cloudwatch_log_group
-  name            = "${local.project}-${local.env}-cw-${each.key}-to-lmd"
+  name            = "${local.project}-${local.env}-cwt-${each.key}-to-lmd"
   log_group_name  = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-lmd"
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
@@ -75,31 +75,31 @@ resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_lambda" {
 # ===============================================================================
 # Amazon CloudWatch Log group for Amazon EC2 Bastion
 # ===============================================================================
-resource "aws_cloudwatch_log_group" "bastion" {
-  name              = "${local.project}-${local.env}-cw-ec2-bastion-cwlog"
+resource "aws_cloudwatch_log_group" "ec2_bastion" {
+  name              = "${local.project}-${local.env}-cwt-ec2-bastion-cwlog"
   retention_in_days = local.retention_in_days
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-ec2-bastion-cwlog"
+    Name = "${local.project}-${local.env}-cwt-ec2-bastion-cwlog"
   }
 }
 
-resource "aws_cloudwatch_log_stream" "bastion" {
-  name           = "${local.project}-${local.env}-cw-ec2-bastion-cwstream"
-  log_group_name = aws_cloudwatch_log_group.bastion.name
+resource "aws_cloudwatch_log_stream" "ec2_bastion" {
+  name           = "${local.project}-${local.env}-cwt-ec2-bastion-cwstream"
+  log_group_name = aws_cloudwatch_log_group.ec2_bastion.name
 }
 
-resource "aws_cloudwatch_log_subscription_filter" "bastion_to_firehose" {
-  name            = "${local.project}-${local.env}-cw-ec2-bastion-to-adf"
-  log_group_name  = aws_cloudwatch_log_group.bastion.name
+resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_firehose" {
+  name            = "${local.project}-${local.env}-cwt-ec2-bastion-to-adf"
+  log_group_name  = aws_cloudwatch_log_group.ec2_bastion.name
   filter_pattern  = "?Warning ?Error"
-  destination_arn = aws_kinesis_firehose_delivery_stream.bastion_logs.arn
+  destination_arn = aws_kinesis_firehose_delivery_stream.ec2_bastion_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
 
-resource "aws_cloudwatch_log_subscription_filter" "bastion_to_lambda" {
-  name            = "${local.project}-${local.env}-cw-ec2-bastion-to-lmd"
-  log_group_name  = aws_cloudwatch_log_group.bastion.name
+resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_lambda" {
+  name            = "${local.project}-${local.env}-cwt-ec2-bastion-to-lmd"
+  log_group_name  = aws_cloudwatch_log_group.ec2_bastion.name
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
 }
@@ -109,21 +109,21 @@ resource "aws_cloudwatch_log_subscription_filter" "bastion_to_lambda" {
 # Amazon CloudWatch Log group for Amazon SNS
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "sns" {
-  name              = "${local.project}-${local.env}-cw-sns-cwlog"
+  name              = "${local.project}-${local.env}-cwt-sns-cwlog"
   retention_in_days = local.retention_in_days
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-sns-cwlog"
+    Name = "${local.project}-${local.env}-cwt-sns-cwlog"
   }
 }
 
 resource "aws_cloudwatch_log_stream" "sns" {
-  name           = "${local.project}-${local.env}-cw-sns-cwstream"
+  name           = "${local.project}-${local.env}-cwt-sns-cwstream"
   log_group_name = aws_cloudwatch_log_group.sns.name
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "sns_to_firehose" {
-  name            = "${local.project}-${local.env}-cw-sns-to-firehose"
+  name            = "${local.project}-${local.env}-cwt-sns-to-adf"
   log_group_name  = aws_cloudwatch_log_group.sns.name
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_kinesis_firehose_delivery_stream.sns_logs.arn
@@ -131,7 +131,7 @@ resource "aws_cloudwatch_log_subscription_filter" "sns_to_firehose" {
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "sns_to_lambda" {
-  name            = "${local.project}-${local.env}-cw-sns-to-lmd"
+  name            = "${local.project}-${local.env}-cwt-sns-to-lmd"
   log_group_name  = aws_cloudwatch_log_group.sns.name
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
@@ -143,23 +143,23 @@ resource "aws_cloudwatch_log_subscription_filter" "sns_to_lambda" {
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "lambda_function" {
   for_each          = local.lambda_functions
-  name              = "/aws/lambda/${each.key}-cwlog"
+  name              = "/aws/lambda/${each.key}-cwtlog"
   retention_in_days = local.retention_in_days
 
   tags = {
-    Name = "/aws/lambda/${each.key}-cwlog"
+    Name = "/aws/lambda/${each.key}-cwtlog"
   }
 }
 
 resource "aws_cloudwatch_log_stream" "lambda_function" {
   for_each       = local.lambda_functions
-  name           = "${local.project}-${local.env}-cw-lambda-${each.key}-cwstream"
+  name           = "${local.project}-${local.env}-cwt-lmd-${each.key}-cwstream"
   log_group_name = aws_cloudwatch_log_group.lambda_function[each.key].name
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_lambda" {
   for_each        = local.lambda_functions
-  name            = "${local.project}-${local.env}-cw-lambda-${each.key}-to-lmd"
+  name            = "${local.project}-${local.env}-cwt-lmd-${each.key}-to-lmd"
   log_group_name  = aws_cloudwatch_log_group.lambda_function[each.key].name
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
@@ -167,7 +167,7 @@ resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_lambda" {
 
 resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_firehose" {
   for_each        = local.lambda_functions
-  name            = "${local.project}-${local.env}-cw-lambda-${each.key}-to-adf"
+  name            = "${local.project}-${local.env}-cwt-lmd-${each.key}-to-adf"
   log_group_name  = aws_cloudwatch_log_group.lambda_function[each.key].name
   filter_pattern  = "?Warning ?Error"
   destination_arn = aws_kinesis_firehose_delivery_stream.lambda_logs[each.key].arn
@@ -179,16 +179,16 @@ resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_firehose" 
 # Amazon CloudWatch Log group for Amazon Data Firehose
 # ===============================================================================
 resource "aws_cloudwatch_log_group" "adf" {
-  name              = "/aws/kinesisfirehose/${local.project}-${local.env}-cw-adf-cwlog"
+  name              = "/aws/kinesisfirehose/${local.project}-${local.env}-cwt-adf-cwlog"
   retention_in_days = local.retention_in_days
 
   tags = {
-    Name = "/aws/kinesisfirehose/${local.project}-${local.env}-cw-adf-cwlog"
+    Name = "/aws/kinesisfirehose/${local.project}-${local.env}-cwt-adf-cwlog"
   }
 }
 
 resource "aws_cloudwatch_log_stream" "adf" {
-  name           = "${local.project}-${local.env}-cw-adf-cwstream"
+  name           = "${local.project}-${local.env}-cwt-adf-cwstream"
   log_group_name = aws_cloudwatch_log_group.adf.name
 }
 
@@ -197,7 +197,7 @@ resource "aws_cloudwatch_log_stream" "adf" {
 # Amazon CloudWatch Metrics for Amazon Aurora Serverless v2
 # ===============================================================================
 resource "aws_cloudwatch_metric_alarm" "aurora_postgres_acuutilization_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-aurora-postgres-acuutilization-high-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-aur-serverless-acuutilization-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "ACUUtilization"
@@ -220,12 +220,12 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_acuutilization_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-aurora-postgres-acuutilization-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-aurora-serverless-acuutilization-high-alarm"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
-  alarm_name          = "${local.project}-${local.env}-cw-aurora-postgres-database-capacity-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-aurora-serverless-database-capacity-alarm"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "ServerlessDatabaseCapacity"
@@ -248,7 +248,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-aurora-postgres-database-capacity-alarm"
+    Name = "${local.project}-${local.env}-cwt-aurora-serverless-database-capacity-alarm"
   }
 }
 
@@ -257,7 +257,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
 # Amazon CloudWatch Metrics for AWS Lambda
 # ===============================================================================
 resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
-  alarm_name          = "${local.project}-${local.env}-cw-lmd-errors-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-lmd-errors-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   metric_name         = "Errors"
@@ -276,12 +276,12 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-lmd-errors-alarm"
+    Name = "${local.project}-${local.env}-cwt-lmd-errors-alarm"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
-  alarm_name          = "${local.project}-${local.env}-cw-lmd-throttles-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-lmd-throttles-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   metric_name         = "Throttles"
@@ -300,12 +300,12 @@ resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-lmd-throttles-alarm"
+    Name = "${local.project}-${local.env}-cwt-lmd-throttles-alarm"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "lambda_concurrent_executions" {
-  alarm_name          = "${local.project}-${local.env}-cw-lmd-concurrent-executions-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-lmd-concurrent-executions-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   metric_name         = "ConcurrentExecutions"
@@ -324,7 +324,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_concurrent_executions" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-lmd-concurrent-executions-alarm"
+    Name = "${local.project}-${local.env}-cwt-lmd-concurrent-executions-alarm"
   }
 }
 
@@ -337,8 +337,8 @@ data "aws_servicequotas_service_quota" "lambda_concurrent_executions" {
 # ===============================================================================
 # Amazon CloudWatch Metrics for Amazon EC2 Bastion
 # ===============================================================================
-resource "aws_cloudwatch_metric_alarm" "bastion_cpu_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-ec2-bastion-cpu-high-alarm"
+resource "aws_cloudwatch_metric_alarm" "ec2_bastion_cpu_high" {
+  alarm_name          = "${local.project}-${local.env}-cwt-ec2-bastion-cpu-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
@@ -361,12 +361,12 @@ resource "aws_cloudwatch_metric_alarm" "bastion_cpu_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-ec2-bastion-cpu-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-ec2-bastion-cpu-high-alarm"
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "bastion_memory_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-ec2-bastion-memory-high-alarm"
+resource "aws_cloudwatch_metric_alarm" "ec2_bastion_memory_high" {
+  alarm_name          = "${local.project}-${local.env}-cwt-ec2-bastion-memory-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "MemoryUtilization"
@@ -389,12 +389,12 @@ resource "aws_cloudwatch_metric_alarm" "bastion_memory_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-ec2-bastion-memory-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-ec2-bastion-memory-high-alarm"
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "bastion_disk_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-ec2-bastion-disk-high-alarm"
+resource "aws_cloudwatch_metric_alarm" "ec2_bastion_disk_high" {
+  alarm_name          = "${local.project}-${local.env}-cwt-ec2-bastion-disk-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "DiskUtilization"
@@ -417,12 +417,12 @@ resource "aws_cloudwatch_metric_alarm" "bastion_disk_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-ec2-bastion-disk-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-ec2-bastion-disk-high-alarm"
   }
 }
 
-resource "aws_cloudwatch_metric_alarm" "bastion_status_check_failed" {
-  alarm_name          = "${local.project}-${local.env}-cw-ec2-bastion-status-check-failed-alarm"
+resource "aws_cloudwatch_metric_alarm" "ec2_bastion_status_check_failed" {
+  alarm_name          = "${local.project}-${local.env}-cwt-ec2-bastion-status-check-failed-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "StatusCheckFailed"
@@ -445,7 +445,7 @@ resource "aws_cloudwatch_metric_alarm" "bastion_status_check_failed" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-ec2-bastion-status-check-failed-alarm"
+    Name = "${local.project}-${local.env}-cwt-ec2-bastion-status-check-failed-alarm"
   }
 }
 
@@ -454,7 +454,7 @@ resource "aws_cloudwatch_metric_alarm" "bastion_status_check_failed" {
 # Amazon CloudWatch Metrics for Amazon Bedrock
 # ===============================================================================
 resource "aws_cloudwatch_metric_alarm" "bedrock_latency_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-brk-latency-high-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-brk-latency-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "Latency"
@@ -465,7 +465,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_latency_high" {
   treat_missing_data  = "notBreaching"
 
   dimensions = {
-    ModelId = "amazon.titan-embed-text-v2:0"
+    ModelId = local.bedrock_knowledge_base_model
   }
 
   alarm_actions = [
@@ -477,12 +477,12 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_latency_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-brk-latency-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-brk-latency-high-alarm"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "bedrock_invocation_count_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-brk-invocation-count-high-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-brk-invocation-count-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "InvocationCount"
@@ -493,7 +493,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_invocation_count_high" {
   treat_missing_data  = "notBreaching"
 
   dimensions = {
-    ModelId = "amazon.titan-embed-text-v2:0"
+    ModelId = local.bedrock_knowledge_base_model
   }
 
   alarm_actions = [
@@ -505,12 +505,12 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_invocation_count_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-brk-invocation-count-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-brk-invocation-count-high-alarm"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "bedrock_error_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-brk-error-high-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-brk-error-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "Error"
@@ -521,7 +521,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_error_high" {
   treat_missing_data  = "notBreaching"
 
   dimensions = {
-    ModelId = "amazon.titan-embed-text-v2:0"
+    ModelId = local.bedrock_knowledge_base_model
   }
 
   alarm_actions = [
@@ -533,12 +533,12 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_error_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-brk-error-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-brk-error-high-alarm"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "bedrock_input_token_count_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-brk-input-token-count-high-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-brk-input-token-count-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "InputTokenCount"
@@ -561,12 +561,12 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_input_token_count_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-brk-input-token-count-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-brk-input-token-count-high-alarm"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "bedrock_output_token_count_high" {
-  alarm_name          = "${local.project}-${local.env}-cw-brk-output-token-count-high-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-brk-output-token-count-high-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "OutputTokenCount"
@@ -589,7 +589,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_output_token_count_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-brk-output-token-count-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-brk-output-token-count-high-alarm"
   }
 }
 
@@ -599,18 +599,18 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_output_token_count_high" {
 # ================================================================================
 resource "aws_cloudwatch_log_delivery_source" "cloudfront_access_logs" {
   provider     = aws.virginia
-  name         = "${local.project}-${local.env}-cw-cf-access-logs-source"
+  name         = "${local.project}-${local.env}-cwt-cft-access-logs-v2-source"
   log_type     = "ACCESS_LOGS"
   resource_arn = aws_cloudfront_distribution.main.arn
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-cf-access-logs-source"
+    Name = "${local.project}-${local.env}-cwt-cft-access-logs-v2-source"
   }
 }
 
 resource "aws_cloudwatch_log_delivery_destination" "cloudfront_access_logs" {
   provider                  = aws.virginia
-  name                      = "${local.project}-${local.env}-cw-cf-access-logs-destination"
+  name                      = "${local.project}-${local.env}-cwt-cft-access-logs-v2-destination"
   delivery_destination_type = "S3"
   output_format             = "parquet"
 
@@ -619,7 +619,7 @@ resource "aws_cloudwatch_log_delivery_destination" "cloudfront_access_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-cf-access-logs-destination"
+    Name = "${local.project}-${local.env}-cwt-cft-access-logs-v2-destination"
   }
 }
 
@@ -633,6 +633,6 @@ resource "aws_cloudwatch_log_delivery" "cloudfront_access_logs" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-cw-cf-access-logs-delivery"
+    Name = "${local.project}-${local.env}-cwt-cft-access-logs-v2-delivery"
   }
 }
