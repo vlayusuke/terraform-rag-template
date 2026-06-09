@@ -220,12 +220,12 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_acuutilization_high" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cwt-aurora-serverless-acuutilization-high-alarm"
+    Name = "${local.project}-${local.env}-cwt-aur-serverless-acuutilization-high-alarm"
   }
 }
 
 resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
-  alarm_name          = "${local.project}-${local.env}-cwt-aurora-serverless-database-capacity-alarm"
+  alarm_name          = "${local.project}-${local.env}-cwt-aur-serverless-database-capacity-alarm"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "ServerlessDatabaseCapacity"
@@ -248,7 +248,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-cwt-aurora-serverless-database-capacity-alarm"
+    Name = "${local.project}-${local.env}-cwt-aur-serverless-database-capacity-alarm"
   }
 }
 
