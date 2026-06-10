@@ -2,7 +2,7 @@
 # Security Group for Amazon EC2 (Bastion)
 # ===============================================================================
 resource "aws_security_group" "bastion" {
-  name        = "${local.project}-${local.env}-bastion-sg"
+  name        = "${local.project}-${local.env}-sgr-ec2-bastion"
   description = "Security Group for ${local.project}-${local.env} Bastion"
   vpc_id      = aws_vpc.main.id
 
@@ -27,7 +27,7 @@ resource "aws_security_group" "bastion" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-bastion-sg"
+    Name = "${local.project}-${local.env}-sgr-ec2-bastion"
   }
 }
 
@@ -36,7 +36,7 @@ resource "aws_security_group" "bastion" {
 # Security Group for Amazon Aurora Serverless v2
 # ===============================================================================
 resource "aws_security_group" "rds" {
-  name        = "${local.project}-${local.env}-rds-sg"
+  name        = "${local.project}-${local.env}-sgr-rds"
   description = "Security Group for ${local.project}-${local.env} Amazon Aurora Serverless v2"
   vpc_id      = aws_vpc.main.id
 
@@ -71,7 +71,7 @@ resource "aws_security_group" "rds" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-rds-sg"
+    Name = "${local.project}-${local.env}-sgr-rds"
   }
 }
 
@@ -80,7 +80,7 @@ resource "aws_security_group" "rds" {
 # Security Group for EC2 Instance Connector Endpoint
 # ================================================================================
 resource "aws_security_group" "eic" {
-  name        = "${local.project}-${local.env}-eic-sg"
+  name        = "${local.project}-${local.env}-sgr-eic"
   description = "Security Group for ${local.project}-${local.env} EC2 Instance Connector Endpoint"
   vpc_id      = aws_vpc.main.id
 
@@ -105,6 +105,6 @@ resource "aws_security_group" "eic" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-eic-sg"
+    Name = "${local.project}-${local.env}-sgr-eic"
   }
 }
