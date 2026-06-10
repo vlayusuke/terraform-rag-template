@@ -10,7 +10,7 @@
 # https://docs.aws.amazon.com/ja_jp/AmazonRDS/latest/AuroraUserGuide/data-api.html
 # ================================================================================
 resource "aws_rds_cluster" "aurora_postgres" {
-  cluster_identifier                    = "${local.project}-${local.env}-aurora-serverless-cluster"
+  cluster_identifier                    = "${local.project}-${local.env}-aur-serverless-cluster"
   engine                                = "aurora-postgresql"
   engine_version                        = local.aurora_postgresql_version
   engine_mode                           = "provisioned"
@@ -59,19 +59,19 @@ resource "aws_rds_cluster" "aurora_postgres" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-aurora-serverless-cluster"
+    Name = "${local.project}-${local.env}-aur-serverless-cluster"
   }
 }
 
 resource "aws_db_subnet_group" "aurora_postgres" {
-  name = "${local.project}-${local.env}-aurora-serverless-subg"
+  name = "${local.project}-${local.env}-aur-serverless-subg"
   subnet_ids = [
     for subnet in aws_subnet.main_private :
     subnet.id
   ]
 
   tags = {
-    Name = "${local.project}-${local.env}-aurora-serverless-subg"
+    Name = "${local.project}-${local.env}-aur-serverless-subg"
   }
 }
 
@@ -81,7 +81,7 @@ resource "aws_db_subnet_group" "aurora_postgres" {
 # ================================================================================
 resource "aws_rds_cluster_instance" "aurora_postgres_instance" {
   count                                 = local.rds_cluster_instance_count
-  identifier                            = "${local.project}-${local.env}-aurora-serverless-instance-${count.index + 1}"
+  identifier                            = "${local.project}-${local.env}-aur-serverless-instance-${count.index + 1}"
   cluster_identifier                    = aws_rds_cluster.aurora_postgres.id
   instance_class                        = "db.serverless"
   engine                                = "aurora-postgresql"
@@ -104,7 +104,7 @@ resource "aws_rds_cluster_instance" "aurora_postgres_instance" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-aurora-serverless-instance-${count.index + 1}"
+    Name = "${local.project}-${local.env}-aur-serverless-instance-${count.index + 1}"
   }
 }
 
@@ -113,12 +113,12 @@ resource "aws_rds_cluster_instance" "aurora_postgres_instance" {
 # DB Parameter Group
 # ===============================================================================
 resource "aws_db_parameter_group" "aurora_postgres" {
-  name        = "${local.project}-${local.env}-aurora-serverless-instance-dbpg"
+  name        = "${local.project}-${local.env}-aur-serverless-instance-dbpg"
   family      = "aurora-postgresql15"
   description = "Parameter group for Aurora PostgreSQL for ${local.project}"
 
   tags = {
-    Name = "${local.project}-${local.env}-aurora-serverless-instance-dbpg"
+    Name = "${local.project}-${local.env}-aur-serverless-instance-dbpg"
   }
 }
 
