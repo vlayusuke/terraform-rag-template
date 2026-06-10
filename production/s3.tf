@@ -5,10 +5,10 @@ data "aws_elb_service_account" "alb_logs" {}
 # Amazon S3 Bucket for RAG Document
 # ===============================================================================
 resource "aws_s3_bucket" "rag_document" {
-  bucket = "${local.project}-${local.env}-s3-rag-document-bucket"
+  bucket = "${local.project}-${local.env}-s3-brk-rag-document-bucket"
 
   tags = {
-    Name = "${local.project}-${local.env}-s3-rag-document-bucket"
+    Name = "${local.project}-${local.env}-s3-brk-rag-document-bucket"
   }
 }
 
@@ -267,10 +267,10 @@ data "aws_iam_policy_document" "vpc_flow_log" {
 # Amazon S3 Bucket for AWS Lambda logs
 # ===============================================================================
 resource "aws_s3_bucket" "lambda_logs" {
-  bucket = "${local.project}-${local.env}-s3-lambda-logs-bucket"
+  bucket = "${local.project}-${local.env}-s3-lmd-logs-bucket"
 
   tags = {
-    Name = "${local.project}-${local.env}-s3-lambda-logs-bucket"
+    Name = "${local.project}-${local.env}-s3-lmd-logs-bucket"
   }
 }
 
@@ -281,7 +281,7 @@ resource "aws_s3_object" "prefix_lambda" {
   acl      = "private"
 
   tags = {
-    Name = "${local.project}-${local.env}-s3-prefix-lambda-${each.key}"
+    Name = "${local.project}-${local.env}-s3-prefix-lmd-${each.key}"
   }
 }
 
@@ -406,10 +406,10 @@ data "aws_iam_policy_document" "lambda_logs" {
 # Amazon S3 Bucket for Amazon Aurora logs
 # ===============================================================================
 resource "aws_s3_bucket" "aurora_logs" {
-  bucket = "${local.project}-${local.env}-s3-aurora-logs-bucket"
+  bucket = "${local.project}-${local.env}-s3-aur-logs-bucket"
 
   tags = {
-    Name = "${local.project}-${local.env}-s3-aurora-logs-bucket"
+    Name = "${local.project}-${local.env}-s3-aur-logs-bucket"
   }
 }
 
@@ -639,6 +639,134 @@ data "aws_iam_policy_document" "bedrock_logs" {
     resources = [
       aws_s3_bucket.bedrock_logs.arn,
       "${aws_s3_bucket.bedrock_logs.arn}/*",
+    ]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
+      ]
+    }
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "*",
+      ]
+    }
+  }
+}
+
+
+# ===============================================================================
+# Amazon S3 Bucket for Amazon EC2 Bastion logs
+# ===============================================================================
+resource "aws_s3_bucket" "bastion_logs" {
+  bucket = "${local.project}-${local.env}-s3-ec2-bastion-logs-bucket"
+
+  tags = {
+    Name = "${local.project}-${local.env}-s3-ec2-bastion-logs-bucket"
+  }
+}
+
+resource "aws_s3_bucket_ownership_controls" "bastion_logs" {
+  bucket = aws_s3_bucket.bastion_logs.id
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "bastion_logs" {
+  bucket = aws_s3_bucket.bastion_logs.id
+  acl    = "private"
+
+  depends_on = [
+    aws_s3_bucket_ownership_controls.bastion_logs,
+  ]
+}
+
+resource "aws_s3_bucket_public_access_block" "bastion_logs" {
+  bucket = aws_s3_bucket.bastion_logs.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "bastion_logs" {
+  bucket = aws_s3_bucket.bastion_logs.bucket
+
+  rule {
+    blocked_encryption_types = [
+      "SSE-C"
+    ]
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
+    }
+    bucket_key_enabled = false
+  }
+}
+
+resource "aws_s3_bucket_versioning" "bastion_logs" {
+  bucket = aws_s3_bucket.bastion_logs.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "bastion_logs" {
+  bucket = aws_s3_bucket.bastion_logs.id
+
+  rule {
+    id     = "transition-and-delete-object"
+    status = "Enabled"
+
+    filter {
+      object_size_greater_than = 0
+    }
+
+    transition {
+      days          = local.transition_days
+      storage_class = "GLACIER"
+    }
+
+    expiration {
+      days = local.expire_days
+    }
+
+    noncurrent_version_transition {
+      noncurrent_days = local.transition_days
+      storage_class   = "GLACIER"
+    }
+
+    noncurrent_version_expiration {
+      noncurrent_days = local.expire_days
+    }
+  }
+
+  depends_on = [
+    aws_s3_bucket_versioning.bastion_logs,
+  ]
+}
+
+resource "aws_s3_bucket_policy" "bastion_logs" {
+  bucket = aws_s3_bucket.bastion_logs.id
+  policy = data.aws_iam_policy_document.bastion_logs.json
+}
+
+data "aws_iam_policy_document" "bastion_logs" {
+  statement {
+    sid    = "EnforceSSL"
+    effect = "Deny"
+    actions = [
+      "s3:*",
+    ]
+    resources = [
+      aws_s3_bucket.bastion_logs.arn,
+      "${aws_s3_bucket.bastion_logs.arn}/*",
     ]
     condition {
       test     = "Bool"
@@ -917,10 +1045,10 @@ data "aws_iam_policy_document" "sns_event_logs" {
 # Amazon S3 Bucket for Amazon CloudFront logs
 # ===============================================================================
 resource "aws_s3_bucket" "cloudfront_logs" {
-  bucket = "${local.project}-${local.env}-s3-cloudfront-logs-bucket"
+  bucket = "${local.project}-${local.env}-s3-cft-logs-bucket"
 
   tags = {
-    Name = "${local.project}-${local.env}-s3-cloudfront-logs-bucket"
+    Name = "${local.project}-${local.env}-s3-cft-logs-bucket"
   }
 }
 
@@ -1192,10 +1320,10 @@ data "aws_iam_policy_document" "waf_logs" {
 # Amazon S3 Bucket for Amazon EC2 Bastion
 # ===============================================================================
 resource "aws_s3_bucket" "bastion" {
-  bucket = "${local.project}-${local.env}-s3-bastion-bucket"
+  bucket = "${local.project}-${local.env}-s3-ec2-bastion-bucket"
 
   tags = {
-    Name = "${local.project}-${local.env}-s3-bastion-bucket"
+    Name = "${local.project}-${local.env}-s3-ec2-bastion-bucket"
   }
 }
 
@@ -1205,7 +1333,7 @@ resource "aws_s3_object" "prefix_bastion_logs" {
   acl    = "private"
 
   tags = {
-    Name = "${local.project}-${local.env}-s3-prefix-bastion-logs"
+    Name = "${local.project}-${local.env}-s3-prefix-ec2-bastion-logs"
   }
 }
 
