@@ -114,7 +114,7 @@ resource "aws_cloudformation_stack" "operational_best_practices_for_cis" {
 }
 
 resource "aws_config_config_rule" "s3_bucket_server_side_encryption_enabled" {
-  name = "${local.project}-${local.env}-aws-cfg-s3-bucket-server-side-encryption-enabled"
+  name = "${local.project}-${local.env}-aws-cfg-s3-bucket-sse-enabled"
 
   source {
     owner             = "AWS"
