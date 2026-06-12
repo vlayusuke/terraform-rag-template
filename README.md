@@ -37,7 +37,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 | Resources                  | Version  |
 | :------------------------- | -------: |
-| Terraform                  | 1.15.5   |
+| Terraform                  | 1.15.6   |
 | AWS Provider               | 6.50.0   |
 | AWS Cloud Control Provider | 1.88.0   |
 
