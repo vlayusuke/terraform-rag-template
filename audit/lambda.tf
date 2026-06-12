@@ -2,7 +2,7 @@
 # AWS Lambda Function for CloudWatch log error alert audit
 # ===============================================================================
 resource "aws_lambda_function" "lambda_log_error_alert_audit" {
-  function_name    = "aud-lmd-cw-log-error-alert"
+  function_name    = "aud-lmd-cwt-log-error-alert"
   role             = aws_iam_role.lambda_cloudwatch_audit.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.log_error_alert_audit.output_path
@@ -28,7 +28,7 @@ resource "aws_lambda_function" "lambda_log_error_alert_audit" {
   }
 
   tags = {
-    Name = "${local.project}-${local.env}-lmd-cw-log-error-alert-audit"
+    Name = "${local.project}-${local.env}-lmd-cwt-log-error-alert-audit"
   }
 }
 
