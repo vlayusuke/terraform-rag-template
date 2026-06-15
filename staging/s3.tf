@@ -1395,6 +1395,17 @@ resource "aws_s3_object" "bastion_sh" {
   }
 }
 
+resource "aws_s3_object" "awslogs_conf" {
+  bucket                 = aws_s3_bucket.bastion.id
+  key                    = "awslogs.conf"
+  content                = local.awslogs_conf
+  server_side_encryption = "AES256"
+
+  lifecycle {
+    prevent_destroy = false
+  }
+}
+
 resource "aws_s3_object" "install_iam_ssh" {
   bucket                 = aws_s3_bucket.bastion.id
   key                    = "install_iam_ssh.sh"
@@ -1420,6 +1431,13 @@ resource "aws_s3_object" "aws_ec2_ssh_conf" {
 locals {
   bastion_sh = templatefile(
     "files/startup_scripts/bastion.sh",
+    {
+      bastion_bucket = aws_s3_bucket.bastion.id
+    }
+  )
+
+  awslogs_conf = templatefile(
+    "files/startup_scripts/awslogs.conf",
     {
       bastion_bucket = aws_s3_bucket.bastion.id
     }
