@@ -21,6 +21,12 @@ resource "aws_instance" "ec2_bastion" {
     {
       bastion_bucket = aws_s3_bucket.bastion.id
       iam_ssh_bucket = aws_s3_bucket.bastion.id
+    },
+    "files/startup_scripts/awslogs.conf",
+    {
+      bastion_bucket = aws_s3_bucket.bastion.id
+      log_group_name = aws_cloudwatch_log_group.bastion.name
+      instance_id    = aws_instance.ec2_bastion.id
     }
   )
 
@@ -97,7 +103,7 @@ resource "aws_key_pair" "ec2_bastion" {
 
 
 # ================================================================================
-# AWS SSM Parameter
+# AWS SSM Parameter for Amazon EC2 Instance (Bastion)
 # ================================================================================
 data "aws_ssm_parameter" "arm64_al2023_ami" {
   name = "/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-arm64"
