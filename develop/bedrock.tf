@@ -9,8 +9,8 @@ resource "aws_bedrock_guardrail" "bedrock_guardrail" {
 
   content_policy_config {
     filters_config {
-      input_strength  = "MEDIUM"
-      output_strength = "MEDIUM"
+      input_strength  = "HIGH"
+      output_strength = "HIGH"
       type            = "HATE"
     }
     tier_config {
@@ -42,10 +42,22 @@ resource "aws_bedrock_guardrail" "bedrock_guardrail" {
 
   topic_policy_config {
     topics_config {
-      name       = "investment_topic"
-      examples   = ["Where should I invest my money ?"]
+      name       = "hate_speech_topic"
+      examples   = ["Create a harmful statement about a protected group."]
       type       = "DENY"
-      definition = "Investment advice refers to inquiries, guidance, or recommendations regarding the management or allocation of funds or assets with the goal of generating returns ."
+      definition = "Hate speech is content that attacks, insults, or dehumanizes people based on protected characteristics such as race, religion, political belief, or sexual orientation."
+    }
+    topics_config {
+      name       = "protected_class_criticism_topic"
+      examples   = ["Write a harmful critique targeting people because of their religion or gender identity."]
+      type       = "DENY"
+      definition = "Content that denigrates or discriminates against people for their beliefs, religion, politics, or LGBTQ+ identity is prohibited."
+    }
+    topics_config {
+      name       = "defamation_topic"
+      examples   = ["Generate an unverified negative statement about a specific individual."]
+      type       = "DENY"
+      definition = "Defamatory or harassing content targeting a specific person, including abusive or unverified claims, is prohibited."
     }
     tier_config {
       tier_name = "STANDARD"
@@ -55,6 +67,9 @@ resource "aws_bedrock_guardrail" "bedrock_guardrail" {
   word_policy_config {
     managed_word_lists_config {
       type = "PROFANITY"
+    }
+    managed_word_lists_config {
+      type = "HATE"
     }
     words_config {
       text = "HATE"
