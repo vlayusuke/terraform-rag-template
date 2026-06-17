@@ -21,12 +21,6 @@ resource "aws_instance" "ec2_bastion" {
     {
       bastion_bucket = aws_s3_bucket.bastion.id
       iam_ssh_bucket = aws_s3_bucket.bastion.id
-    },
-    "files/startup_scripts/awslogs.conf",
-    {
-      bastion_bucket = aws_s3_bucket.bastion.id
-      log_group_name = aws_cloudwatch_log_group.bastion.name
-      instance_id    = aws_instance.ec2_bastion.id
     }
   )
 
