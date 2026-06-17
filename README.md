@@ -53,9 +53,9 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 | Environmtnt | Resource | Notice           |
 | :---------- | -------: | :--------------- |
-| develop     |      345 | N/A              |
-| staging     |      345 | N/A              |
-| production  |      345 | N/A              |
+| develop     |      347 | N/A              |
+| staging     |      347 | N/A              |
+| production  |      347 | N/A              |
 | audit       |      178 | Each AWS account |
 
 ## 環境構築をする際の注意事項
