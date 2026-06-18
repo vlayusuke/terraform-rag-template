@@ -34,14 +34,14 @@ data "aws_iam_policy_document" "event_notifications_audit" {
     sid    = "SNSAccess"
     effect = "Allow"
     actions = [
-      "sns:Publish",
-      "sns:RemovePermission",
-      "sns:SetTopicAttributes",
-      "sns:DeleteTopic",
-      "sns:ListSubscriptionsByTopic",
       "sns:GetTopicAttributes",
+      "sns:SetTopicAttributes",
       "sns:AddPermission",
+      "sns:RemovePermission",
+      "sns:DeleteTopic",
       "sns:Subscribe",
+      "sns:ListSubscriptionsByTopic",
+      "sns:Receive",
     ]
     resources = [
       aws_sns_topic.event_notifications_audit.arn,
@@ -72,10 +72,12 @@ data "aws_iam_policy_document" "event_notifications_audit" {
     resources = [
       aws_sns_topic.event_notifications_audit.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
         "events.amazonaws.com",
+        "chatobot.amazonaws.com",
       ]
     }
   }
@@ -120,14 +122,14 @@ data "aws_iam_policy_document" "event_notifications_audit_global" {
     sid    = "SNSAccess"
     effect = "Allow"
     actions = [
-      "sns:Publish",
-      "sns:RemovePermission",
-      "sns:SetTopicAttributes",
-      "sns:DeleteTopic",
-      "sns:ListSubscriptionsByTopic",
       "sns:GetTopicAttributes",
+      "sns:SetTopicAttributes",
       "sns:AddPermission",
+      "sns:RemovePermission",
+      "sns:DeleteTopic",
       "sns:Subscribe",
+      "sns:ListSubscriptionsByTopic",
+      "sns:Receive",
     ]
     resources = [
       aws_sns_topic.event_notifications_audit_global.arn,
@@ -158,10 +160,12 @@ data "aws_iam_policy_document" "event_notifications_audit_global" {
     resources = [
       aws_sns_topic.event_notifications_audit_global.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
         "events.amazonaws.com",
+        "chatobot.amazonaws.com",
       ]
     }
   }
@@ -186,18 +190,54 @@ resource "aws_sns_topic_policy" "config_notifications_policy" {
 
 data "aws_iam_policy_document" "config_notifications_policy" {
   statement {
+    sid    = "SNSAccess"
+    effect = "Allow"
+    actions = [
+      "sns:GetTopicAttributes",
+      "sns:SetTopicAttributes",
+      "sns:AddPermission",
+      "sns:RemovePermission",
+      "sns:DeleteTopic",
+      "sns:Subscribe",
+      "sns:ListSubscriptionsByTopic",
+      "sns:Receive",
+    ]
+    resources = [
+      aws_sns_topic.config_notifications.arn,
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceOwner"
+      values = [
+        data.aws_caller_identity.current.account_id,
+      ]
+    }
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "*",
+      ]
+    }
+  }
+
+  statement {
+    sid    = "SNSPublish"
     effect = "Allow"
     actions = [
       "sns:Publish",
     ]
+    resources = [
+      aws_sns_topic.config_notifications.arn,
+    ]
+
     principals {
       type = "Service"
       identifiers = [
         "events.amazonaws.com",
+        "chatobot.amazonaws.com",
       ]
     }
-    resources = [
-      aws_sns_topic.config_notifications.arn,
-    ]
   }
 }
