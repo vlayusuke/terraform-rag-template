@@ -41,12 +41,12 @@ data "aws_iam_policy_document" "metric_alarm" {
       "sns:DeleteTopic",
       "sns:Subscribe",
       "sns:ListSubscriptionsByTopic",
-      "sns:Publish",
       "sns:Receive",
     ]
     resources = [
       aws_sns_topic.metric_alarm.arn,
     ]
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceOwner"
@@ -54,6 +54,7 @@ data "aws_iam_policy_document" "metric_alarm" {
         data.aws_caller_identity.current.account_id,
       ]
     }
+
     principals {
       type = "AWS"
       identifiers = [
@@ -71,10 +72,12 @@ data "aws_iam_policy_document" "metric_alarm" {
     resources = [
       aws_sns_topic.metric_alarm.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
         "events.amazonaws.com",
+        "chatbot.amazonaws.com",
       ]
     }
   }
@@ -124,12 +127,12 @@ data "aws_iam_policy_document" "event_alarm" {
       "sns:DeleteTopic",
       "sns:Subscribe",
       "sns:ListSubscriptionsByTopic",
-      "sns:Publish",
       "sns:Receive",
     ]
     resources = [
       aws_sns_topic.event_alarm.arn,
     ]
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceOwner"
@@ -137,6 +140,7 @@ data "aws_iam_policy_document" "event_alarm" {
         data.aws_caller_identity.current.account_id,
       ]
     }
+
     principals {
       type = "AWS"
       identifiers = [
@@ -154,10 +158,12 @@ data "aws_iam_policy_document" "event_alarm" {
     resources = [
       aws_sns_topic.event_alarm.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
         "events.amazonaws.com",
+        "chatbot.amazonaws.com",
       ]
     }
   }
@@ -200,18 +206,19 @@ data "aws_iam_policy_document" "event_notification" {
     sid    = "SNSAccess"
     effect = "Allow"
     actions = [
-      "sns:Publish",
-      "sns:RemovePermission",
-      "sns:SetTopicAttributes",
-      "sns:DeleteTopic",
-      "sns:ListSubscriptionsByTopic",
       "sns:GetTopicAttributes",
+      "sns:SetTopicAttributes",
       "sns:AddPermission",
+      "sns:RemovePermission",
+      "sns:DeleteTopic",
       "sns:Subscribe",
+      "sns:ListSubscriptionsByTopic",
+      "sns:Receive",
     ]
     resources = [
       aws_sns_topic.event_notification.arn,
     ]
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceOwner"
@@ -219,6 +226,7 @@ data "aws_iam_policy_document" "event_notification" {
         data.aws_caller_identity.current.account_id,
       ]
     }
+
     principals {
       type = "AWS"
       identifiers = [
@@ -236,10 +244,12 @@ data "aws_iam_policy_document" "event_notification" {
     resources = [
       aws_sns_topic.event_notification.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
         "events.amazonaws.com",
+        "chatbot.amazonaws.com",
       ]
     }
   }
