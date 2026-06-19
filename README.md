@@ -39,17 +39,17 @@ Pythonのバージョンについては、macOS上でHomebrewでパッケージ�
 
 ### Terraformや各種ProviderのVersion
 
-| Resources                  | Version  |
-| :------------------------- | -------: |
-| Terraform                  | 1.15.6   |
-| AWS Provider               | 6.51.0   |
-| AWS Cloud Control Provider | 1.89.0   |
+| Resources                  | Version |
+| :------------------------- | ------: |
+| Terraform                  | 1.15.6  |
+| AWS Provider               | 6.51.0  |
+| AWS Cloud Control Provider | 1.89.0  |
 
 ### AWS Lambda関数に使用しているPythonのruntime
 
-| Resources                  | Version  |
-| :------------------------- | -------: |
-| Python                     | 3.14     |
+| Resources                  | Version |
+| :------------------------- | ------: |
+| Python                     | 3.14    |
 
 ## 構築されるAWSリソースの数
 
@@ -166,15 +166,15 @@ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_terraform-rag-template -C "Key Pair f
 
 ### 本番環境
 
-![本番環境](./terraform-rag-template-v1.2-en-prd.svg)
+![本番環境](./terraform-rag-template-v1.3-en-prd.svg)
 
 ### ステージング環境
 
-![ステージング環境](./terraform-rag-template-v1.2-en-stg.svg)
+![ステージング環境](./terraform-rag-template-v1.3-en-stg.svg)
 
 ### 開発環境
 
-![開発環境](./terraform-rag-template-v1.2-en-dev.svg)
+![開発環境](./terraform-rag-template-v1.3-en-dev.svg)
 
 ## コスト
 
