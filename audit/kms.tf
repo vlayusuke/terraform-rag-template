@@ -19,20 +19,6 @@ resource "aws_kms_key_policy" "cloudtrail" {
 
 data "aws_iam_policy_document" "cloudtrail_kms_policy" {
   statement {
-    sid    = "CloudTrailAssume"
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole",
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "cloudtrail.amazonaws.com",
-      ]
-    }
-  }
-
-  statement {
     sid    = "CloudTrailKMS"
     effect = "Allow"
     actions = [
@@ -40,9 +26,6 @@ data "aws_iam_policy_document" "cloudtrail_kms_policy" {
       "kms:Decrypt",
       "kms:GenerateDataKey*",
       "kms:DescribeKey",
-    ]
-    resources = [
-      aws_kms_key.cloudtrail.arn,
     ]
     principals {
       type = "Service"
@@ -58,14 +41,10 @@ data "aws_iam_policy_document" "cloudtrail_kms_policy" {
     actions = [
       "kms:*",
     ]
-    resources = [
-      aws_kms_key.cloudtrail.arn,
-    ]
     principals {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/${local.iam_infra_group}",
       ]
     }
   }
@@ -113,6 +92,9 @@ data "aws_iam_policy_document" "guardduty_kms_policy" {
       "kms:Encrypt",
       "kms:Decrypt",
       "kms:GenerateDataKey*",
+      "kms:CreateGrant",
+      "kms:ListGrants",
+      "kms:RevokeGrant",
       "kms:DescribeKey",
     ]
     resources = [
@@ -139,7 +121,6 @@ data "aws_iam_policy_document" "guardduty_kms_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/${local.iam_infra_group}",
       ]
     }
   }
