@@ -464,8 +464,6 @@ data "aws_iam_policy_document" "config" {
     resources = [
       aws_s3_bucket.config_logs.arn,
       "${aws_s3_bucket.config_logs.arn}/*",
-      aws_s3_bucket.config_logs_global.arn,
-      "${aws_s3_bucket.config_logs_global.arn}/*",
     ]
   }
 
@@ -568,10 +566,6 @@ data "aws_iam_policy_document" "cloudtrail" {
     resources = [
       aws_s3_bucket.cloudtrail_logs.arn,
       "${aws_s3_bucket.cloudtrail_logs.arn}/*",
-      aws_s3_bucket.cloudtrail_logs_osaka.arn,
-      "${aws_s3_bucket.cloudtrail_logs_osaka.arn}/*",
-      aws_s3_bucket.cloudtrail_logs_global.arn,
-      "${aws_s3_bucket.cloudtrail_logs_global.arn}/*",
     ]
   }
 
@@ -586,10 +580,6 @@ data "aws_iam_policy_document" "cloudtrail" {
     resources = [
       aws_cloudwatch_log_group.cloudtrail.arn,
       "${aws_cloudwatch_log_group.cloudtrail.arn}:*",
-      aws_cloudwatch_log_group.cloudtrail_osaka.arn,
-      "${aws_cloudwatch_log_group.cloudtrail_osaka.arn}:*",
-      aws_cloudwatch_log_group.cloudtrail_global.arn,
-      "${aws_cloudwatch_log_group.cloudtrail_global.arn}:*",
     ]
   }
 }
