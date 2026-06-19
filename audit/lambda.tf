@@ -242,6 +242,6 @@ resource "aws_lambda_permission" "security_notice" {
   statement_id  = "AllowExecutionFromCloudWatch"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.security_notice.function_name
-  principal     = "guardduty.amazonaws.com"
-  source_arn    = "arn:aws:guardduty:${local.region}:${data.aws_caller_identity.current.account_id}:detector/*"
+  principal     = "logs.${local.region}.amazonaws.com"
+  source_arn    = aws_cloudwatch_log_group.security_notice.arn
 }
