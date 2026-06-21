@@ -66,12 +66,42 @@ resource "aws_cloudwatch_event_target" "config_non_compliance" {
 }
 
 
+# ==============================================================================
+# Amazon EventBridge (AWS Config Configuration Item Changes)
+# ==============================================================================
+resource "aws_cloudwatch_event_rule" "config_item_change" {
+  name           = "${local.project}-${local.env}-ebd-config-item-change"
+  description    = "EventBridge rule to capture AWS Config configuration item changes"
+  event_bus_name = "default"
+
+  event_pattern = jsonencode({
+    "source" : [
+      "aws.config"
+    ],
+    "detail-type" : [
+      "ConfigurationItemChangeNotification",
+      "OversizedConfigurationItemChangeNotification"
+    ]
+  })
+
+  tags = {
+    Name = "${local.project}-${local.env}-ebd-config-item-change"
+  }
+}
+
+resource "aws_cloudwatch_event_target" "config_item_change" {
+  rule      = aws_cloudwatch_event_rule.config_item_change.name
+  target_id = aws_sns_topic.config_notifications.name
+  arn       = aws_sns_topic.config_notifications.arn
+}
+
+
 # ===============================================================================
-# Amazon EventBridge (AWS CloudTrail / ap-northeast-1)
+# Amazon EventBridge (AWS CloudTrail)
 # ===============================================================================
 resource "aws_cloudwatch_event_rule" "cloudtrail" {
   name           = "${local.project}-${local.env}-ebd-ctl"
-  description    = "AWS CloudTrail Notification for ap-northeast-1"
+  description    = "AWS CloudTrail Notification"
   event_bus_name = "default"
 
   event_pattern = jsonencode({
@@ -109,49 +139,4 @@ resource "aws_cloudwatch_event_target" "cloudtrail" {
   rule      = aws_cloudwatch_event_rule.cloudtrail.name
   target_id = aws_sns_topic.event_notifications_audit.name
   arn       = aws_sns_topic.event_notifications_audit.arn
-}
-
-
-# ===============================================================================
-# Amazon EventBridge (AWS CloudTrail / us-east-1)
-# ===============================================================================
-resource "aws_cloudwatch_event_rule" "cloudtrail_global" {
-  provider       = aws.virginia
-  name           = "${local.project}-${local.env}-ebd-ctl-global"
-  description    = "AWS CloudTrail Notification for us-east-1"
-  event_bus_name = "default"
-
-  event_pattern = jsonencode({
-    "source" : [
-      "aws.cloudtrail"
-    ],
-    "detail-type" : [
-      "AWS API Call via CloudTrail"
-    ],
-    "detail" : {
-      "eventSource" : [
-        "signin.amazonaws.com",
-        "monitoring.amazonaws.com",
-        "iam.amazonaws.com",
-        "cloudfront.amazonaws.com",
-        "wafv2.amazonaws.com",
-        "route53.amazonaws.com",
-        "lambda.amazonaws.com",
-        "s3.amazonaws.com",
-        "sns.amazonaws.com",
-        "logs.amazonaws.com",
-      ]
-    }
-  })
-
-  tags = {
-    Name = "${local.project}-${local.env}-ebd-ctl-global"
-  }
-}
-
-resource "aws_cloudwatch_event_target" "cloudtrail_global" {
-  provider  = aws.virginia
-  rule      = aws_cloudwatch_event_rule.cloudtrail_global.name
-  target_id = aws_sns_topic.event_notifications_audit_global.name
-  arn       = aws_sns_topic.event_notifications_audit_global.arn
 }
