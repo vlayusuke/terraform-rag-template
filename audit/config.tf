@@ -1,5 +1,5 @@
 # ===============================================================================
-# AWS Config (ap-northeast-1)
+# AWS Config
 # Reference: https://docs.aws.amazon.com/ja_jp/config/latest/developerguide/resource-config-reference.html
 # ===============================================================================
 resource "aws_config_configuration_recorder" "default" {
@@ -41,6 +41,7 @@ resource "aws_config_configuration_recorder_status" "default" {
 
 resource "aws_cloudformation_stack" "operational_best_practices_for_cis" {
   name = "${local.project}-${local.env}-aws-cfg-operational-best-practices-for-cis"
+
   # commit: 9018e3a3003bde8d8898a2912de64cce39a20b80
   # https://github.com/awslabs/aws-config-rules/blob/master/aws-config-conformance-packs/Operational-Best-Practices-for-CIS.yaml
   template_body = file("./files/config-cloudformation/Operational-Best-Practices-for-CIS.yaml")
