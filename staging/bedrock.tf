@@ -68,9 +68,6 @@ resource "aws_bedrock_guardrail" "bedrock_guardrail" {
     managed_word_lists_config {
       type = "PROFANITY"
     }
-    managed_word_lists_config {
-      type = "HATE"
-    }
     words_config {
       text = "HATE"
     }
