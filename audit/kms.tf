@@ -25,7 +25,14 @@ data "aws_iam_policy_document" "cloudtrail_kms_policy" {
       "kms:Encrypt",
       "kms:Decrypt",
       "kms:GenerateDataKey*",
+      "kms:ReEncrypt*",
       "kms:DescribeKey",
+      "kms:CreateGrant",
+      "kms:ListGrants",
+      "kms:RevokeGrant",
+    ]
+    resources = [
+      aws_kms_key.cloudtrail.arn,
     ]
     principals {
       type = "Service"
@@ -40,6 +47,9 @@ data "aws_iam_policy_document" "cloudtrail_kms_policy" {
     effect = "Allow"
     actions = [
       "kms:*",
+    ]
+    resources = [
+      aws_kms_key.cloudtrail.arn,
     ]
     principals {
       type = "AWS"
@@ -72,26 +82,13 @@ resource "aws_kms_key_policy" "guardduty" {
 
 data "aws_iam_policy_document" "guardduty_kms_policy" {
   statement {
-    sid    = "GuardDutyAssume"
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole",
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "guardduty.amazonaws.com",
-      ]
-    }
-  }
-
-  statement {
     sid    = "GuardDutyKMS"
     effect = "Allow"
     actions = [
       "kms:Encrypt",
       "kms:Decrypt",
       "kms:GenerateDataKey*",
+      "kms:ReEncrypt*",
       "kms:CreateGrant",
       "kms:ListGrants",
       "kms:RevokeGrant",
