@@ -102,6 +102,7 @@ data "aws_iam_policy_document" "cloudtrail_logs" {
     actions = [
       "s3:GetBucketAcl",
       "s3:ListBucket",
+      "s3:GetBucketLocation",
     ]
     resources = [
       aws_s3_bucket.cloudtrail_logs.arn,
@@ -120,6 +121,7 @@ data "aws_iam_policy_document" "cloudtrail_logs" {
     effect = "Allow"
     actions = [
       "s3:PutObject",
+      "s3:PutObjectAcl",
     ]
     resources = [
       "${aws_s3_bucket.cloudtrail_logs.arn}/AWSLogs/${data.aws_caller_identity.current.account_id}/*",
@@ -474,10 +476,11 @@ data "aws_iam_policy_document" "guardduty_logs" {
   }
 
   statement {
-    sid    = "AWSConfigBucketPermissionsCheck"
+    sid    = "GuardDutyBucketPermissionsCheck"
     effect = "Allow"
     actions = [
       "s3:GetBucketAcl",
+      "s3:GetBucketLocation",
     ]
     resources = [
       aws_s3_bucket.guardduty_logs.arn,
@@ -492,7 +495,7 @@ data "aws_iam_policy_document" "guardduty_logs" {
   }
 
   statement {
-    sid    = "AWSConfigBucketExistenceCheck"
+    sid    = "GuardDutyBucketExistenceCheck"
     effect = "Allow"
     actions = [
       "s3:ListBucket",
@@ -510,10 +513,11 @@ data "aws_iam_policy_document" "guardduty_logs" {
   }
 
   statement {
-    sid    = "AWSConfigBucketDelivery"
+    sid    = "GuardDutyBucketDelivery"
     effect = "Allow"
     actions = [
       "s3:PutObject",
+      "s3:PutObjectAcl",
     ]
     resources = [
       "${aws_s3_bucket.guardduty_logs.arn}/*",
