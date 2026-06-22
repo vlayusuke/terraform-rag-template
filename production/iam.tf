@@ -297,6 +297,76 @@ resource "aws_iam_role_policy_attachment" "lambda_response_api" {
 
 
 # ===============================================================================
+# AWS IAM for AWS Lambda (CloudWatch Error Alert)
+# ===============================================================================
+resource "aws_iam_role" "lambda_cloudwatch" {
+  name               = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-role"
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.lambda_cloudwatch_assume.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-role"
+  }
+}
+
+data "aws_iam_policy_document" "lambda_cloudwatch_assume" {
+  statement {
+    sid    = "LambdaAssume"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+    principals {
+      type = "Service"
+      identifiers = [
+        "lambda.amazonaws.com",
+      ]
+    }
+  }
+}
+
+resource "aws_iam_policy" "lambda_cloudwatch" {
+  name   = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-policy"
+  policy = data.aws_iam_policy_document.lambda_cloudwatch.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-policy"
+  }
+}
+
+data "aws_iam_policy_document" "lambda_cloudwatch" {
+  statement {
+    sid    = "LogAccess"
+    effect = "Allow"
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+    resources = [
+      "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${local.project}-${local.env}-*:*",
+    ]
+  }
+
+  statement {
+    sid    = "SNSPublish"
+    effect = "Allow"
+    actions = [
+      "sns:Publish",
+    ]
+    resources = [
+      aws_sns_topic.event_alarm.arn,
+    ]
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
+  role       = aws_iam_role.lambda_cloudwatch.name
+  policy_arn = aws_iam_policy.lambda_cloudwatch.arn
+}
+
+
+# ===============================================================================
 # AWS IAM for Amazon Data Firehose
 # ===============================================================================
 resource "aws_iam_role" "amazon_data_firehose" {
@@ -397,76 +467,6 @@ data "aws_iam_policy_document" "amazon_data_firehose" {
 resource "aws_iam_role_policy_attachment" "amazon_data_firehose" {
   role       = aws_iam_role.amazon_data_firehose.name
   policy_arn = aws_iam_policy.amazon_data_firehose.arn
-}
-
-
-# ===============================================================================
-# AWS IAM for AWS Lambda (CloudWatch Error Alert)
-# ===============================================================================
-resource "aws_iam_role" "lambda_cloudwatch" {
-  name               = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-role"
-  path               = "/"
-  assume_role_policy = data.aws_iam_policy_document.lambda_cloudwatch_assume.json
-
-  tags = {
-    Name = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-role"
-  }
-}
-
-data "aws_iam_policy_document" "lambda_cloudwatch_assume" {
-  statement {
-    sid    = "LambdaAssume"
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole",
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "lambda.amazonaws.com",
-      ]
-    }
-  }
-}
-
-resource "aws_iam_policy" "lambda_cloudwatch" {
-  name   = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-policy"
-  policy = data.aws_iam_policy_document.lambda_cloudwatch.json
-
-  tags = {
-    Name = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-policy"
-  }
-}
-
-data "aws_iam_policy_document" "lambda_cloudwatch" {
-  statement {
-    sid    = "LogAccess"
-    effect = "Allow"
-    actions = [
-      "logs:CreateLogGroup",
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-    ]
-    resources = [
-      "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/${local.project}-${local.env}-*:*",
-    ]
-  }
-
-  statement {
-    sid    = "SNSPublish"
-    effect = "Allow"
-    actions = [
-      "sns:Publish",
-    ]
-    resources = [
-      aws_sns_topic.event_alarm.arn,
-    ]
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
-  role       = aws_iam_role.lambda_cloudwatch.name
-  policy_arn = aws_iam_policy.lambda_cloudwatch.arn
 }
 
 
@@ -974,7 +974,63 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_logs_to_amazon_data_fireho
 
 
 # ===============================================================================
-# AWS IAM for AWS Chatbot (Slack via AWS Chatbot)
+# AWS IAM for Amazon Inspector
+# ===============================================================================
+resource "aws_iam_role" "inspector" {
+  name               = "${local.project}-${local.env}-iam-inspector-role"
+  path               = "/"
+  assume_role_policy = data.aws_iam_policy_document.inspector_assume.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-inspector-role"
+  }
+}
+
+data "aws_iam_policy_document" "inspector_assume" {
+  statement {
+    sid    = "InspectorAssume"
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+    principals {
+      type = "Service"
+      identifiers = [
+        "inspector.amazonaws.com",
+      ]
+    }
+  }
+}
+
+resource "aws_iam_policy" "inspector" {
+  name   = "${local.project}-${local.env}-iam-inspector-policy"
+  policy = data.aws_iam_policy_document.inspector.json
+
+  tags = {
+    Name = "${local.project}-${local.env}-iam-inspector-policy"
+  }
+}
+
+data "aws_iam_policy_document" "inspector" {
+  statement {
+    sid    = "AmazonInspectorAccess"
+    effect = "Allow"
+    actions = [
+      "inspector:StartAssessmentRun",
+    ]
+    resources = [
+      aws_instance.ec2_bastion.arn,
+      aws_lambda_function.request_api.arn,
+      aws_lambda_function.response_api.arn,
+      aws_lambda_function.lambda_log_error_alert.arn,
+      aws_lambda_function.lambda_metric_alarm.arn,
+    ]
+  }
+}
+
+
+# ===============================================================================
+# AWS IAM for AWS Chatbot
 # ===============================================================================
 resource "aws_iam_role" "chatbot" {
   name               = "${local.project}-${local.env}-iam-chatbot-role"
@@ -1012,34 +1068,6 @@ resource "aws_iam_policy" "chatbot" {
 
 data "aws_iam_policy_document" "chatbot" {
   statement {
-    sid    = "BedrockInvoke"
-    effect = "Allow"
-    actions = [
-      "bedrock:InvokeAgent",
-      "bedrock:ListAgents",
-      "bedrock:GetAgent",
-      "bedrock:InvokeAgent",
-      "bedrock:InvokeAgentAlias",
-    ]
-    resources = [
-      "arn:aws:bedrock:${local.region}:${data.aws_caller_identity.current.account_id}:agent-alias/${aws_bedrockagent_agent.bedrock_agent.agent_id}/${aws_bedrockagent_agent_alias.bedrock_agent.agent_alias_id}",
-      "arn:aws:bedrock:${local.region}:${data.aws_caller_identity.current.account_id}:agent-alias/${aws_bedrockagent_agent.bedrock_agent.agent_id}/${aws_bedrockagent_agent_alias.bedrock_agent.agent_alias_id}/*",
-      aws_bedrockagent_agent.bedrock_agent.agent_arn,
-    ]
-  }
-
-  statement {
-    sid    = "BedrockModelAccess"
-    effect = "Allow"
-    actions = [
-      "bedrock:ListFoundationModels",
-    ]
-    resources = [
-      "*",
-    ]
-  }
-
-  statement {
     sid    = "SNSAccess"
     effect = "Allow"
     actions = [
@@ -1053,7 +1081,8 @@ data "aws_iam_policy_document" "chatbot" {
       "sns:ListTopics",
       "sns:ListSubscriptions",
       "sns:ListSubscriptionsByTopic",
-      "sns:Publish",
+      "sns:Receive",
+      "sns:ReceiveMessage",
     ]
     resources = [
       aws_sns_topic.metric_alarm.arn,
@@ -1106,9 +1135,14 @@ data "aws_iam_policy_document" "chatbot" {
       "chatbot:DescribeSlackChannelConfigurations",
       "chatbot:DeleteSlackChannelConfiguration",
       "chatbot:UpdateSlackChannelConfiguration",
+      "chatbot:CreateMicrosoftTeamsChannelConfiguration",
+      "chatbot:DescribeMicrosoftTeamsChannelConfigurations",
+      "chatbot:DeleteMicrosoftTeamsChannelConfiguration",
+      "chatbot:UpdateMicrosoftTeamsChannelConfiguration",
     ]
     resources = [
       "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/slack-channel/*",
+      "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/teams-channel/*",
     ]
   }
 }
@@ -1142,26 +1176,11 @@ data "aws_iam_policy_document" "chatbot_guardrail" {
     effect = "Allow"
     actions = [
       "chatbot:DescribeSlackChannelConfigurations",
+      "chatbot:DescribeMicrosoftTeamsChannelConfigurations",
     ]
     resources = [
       "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/slack-channel/*",
-    ]
-  }
-
-  statement {
-    sid    = "ChatbotBedrockAccess"
-    effect = "Allow"
-    actions = [
-      "bedrock:InvokeAgent",
-      "bedrock:ListAgents",
-      "bedrock:GetAgent",
-      "bedrock:InvokeAgent",
-      "bedrock:InvokeAgentAlias",
-    ]
-    resources = [
-      "arn:aws:bedrock:${local.region}:${data.aws_caller_identity.current.account_id}:agent-alias/${aws_bedrockagent_agent.bedrock_agent.agent_id}/${aws_bedrockagent_agent_alias.bedrock_agent.agent_alias_id}",
-      "arn:aws:bedrock:${local.region}:${data.aws_caller_identity.current.account_id}:agent-alias/${aws_bedrockagent_agent.bedrock_agent.agent_id}/${aws_bedrockagent_agent_alias.bedrock_agent.agent_alias_id}/*",
-      aws_bedrockagent_agent.bedrock_agent.agent_arn,
+      "arn:aws:chatbot::${data.aws_caller_identity.current.account_id}:chat-configuration/teams-channel/*",
     ]
   }
 }
