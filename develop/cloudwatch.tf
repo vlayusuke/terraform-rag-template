@@ -30,7 +30,7 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_lambda" {
   for_each        = local.aurora_cloudwatch_log_group
   name            = "${local.project}-${local.env}-cwt-rds-${each.key}-to-lmd"
   log_group_name  = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-to-lmd"
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = ""
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
 }
 
@@ -58,7 +58,7 @@ resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_firehose" {
   for_each        = local.bedrock_cloudwatch_log_group
   name            = "${local.project}-${local.env}-cwt-${each.key}-to-adf"
   log_group_name  = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-adf"
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.bedrock_logs[each.key].arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
@@ -67,7 +67,7 @@ resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_lambda" {
   for_each        = local.bedrock_cloudwatch_log_group
   name            = "${local.project}-${local.env}-cwt-${each.key}-to-lmd"
   log_group_name  = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-to-lmd"
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = ""
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
 }
 
@@ -92,7 +92,7 @@ resource "aws_cloudwatch_log_stream" "ec2_bastion" {
 resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_firehose" {
   name            = "${local.project}-${local.env}-cwt-ec2-bastion-to-adf"
   log_group_name  = aws_cloudwatch_log_group.ec2_bastion.name
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.ec2_bastion_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
@@ -100,7 +100,7 @@ resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_firehose" {
 resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_lambda" {
   name            = "${local.project}-${local.env}-cwt-ec2-bastion-to-lmd"
   log_group_name  = aws_cloudwatch_log_group.ec2_bastion.name
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = ""
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
 }
 
@@ -125,7 +125,7 @@ resource "aws_cloudwatch_log_stream" "sns" {
 resource "aws_cloudwatch_log_subscription_filter" "sns_to_firehose" {
   name            = "${local.project}-${local.env}-cwt-sns-to-adf"
   log_group_name  = aws_cloudwatch_log_group.sns.name
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.sns_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
@@ -133,7 +133,7 @@ resource "aws_cloudwatch_log_subscription_filter" "sns_to_firehose" {
 resource "aws_cloudwatch_log_subscription_filter" "sns_to_lambda" {
   name            = "${local.project}-${local.env}-cwt-sns-to-lmd"
   log_group_name  = aws_cloudwatch_log_group.sns.name
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = ""
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
 }
 
@@ -161,7 +161,7 @@ resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_lambda" {
   for_each        = local.lambda_functions
   name            = "${local.project}-${local.env}-cwt-lmd-${each.key}-to-lmd"
   log_group_name  = aws_cloudwatch_log_group.lambda_function[each.key].name
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = "?ERROR"
   destination_arn = aws_lambda_function.lambda_log_error_alert.arn
 }
 
@@ -169,7 +169,7 @@ resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_firehose" 
   for_each        = local.lambda_functions
   name            = "${local.project}-${local.env}-cwt-lmd-${each.key}-to-adf"
   log_group_name  = aws_cloudwatch_log_group.lambda_function[each.key].name
-  filter_pattern  = "?Warning ?Error"
+  filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.lambda_logs[each.key].arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
 }
