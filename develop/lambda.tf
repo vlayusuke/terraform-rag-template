@@ -78,8 +78,8 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
   function_name    = "lmd-cwt-log-error-alert"
   role             = aws_iam_role.lambda_cloudwatch.arn
   handler          = "lambda_function.lambda_handler"
-  filename         = data.archive_file.log_error_alert.output_path
-  source_code_hash = data.archive_file.log_error_alert.output_base64sha256
+  filename         = data.archive_file.lambda_log_error_alert.output_path
+  source_code_hash = data.archive_file.lambda_log_error_alert.output_base64sha256
   runtime          = "python3.14"
   timeout          = 10
   memory_size      = 128
@@ -105,7 +105,7 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
   }
 }
 
-data "archive_file" "log_error_alert" {
+data "archive_file" "lambda_log_error_alert" {
   type        = "zip"
   source_dir  = "${path.cwd}/files/lambda/log-error-alert"
   output_path = "${path.module}/artifacts/lmd-cwt-log-error-alert.zip"
@@ -127,8 +127,8 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
   function_name    = "lmd-cwt-metric-alarm"
   role             = aws_iam_role.lambda_cloudwatch.arn
   handler          = "lambda_function.lambda_handler"
-  filename         = data.archive_file.metric_alarm.output_path
-  source_code_hash = data.archive_file.metric_alarm.output_base64sha256
+  filename         = data.archive_file.lambda_metric_alarm.output_path
+  source_code_hash = data.archive_file.lambda_metric_alarm.output_base64sha256
   runtime          = "python3.14"
   timeout          = 10
   memory_size      = 128
@@ -155,7 +155,7 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
   }
 }
 
-data "archive_file" "metric_alarm" {
+data "archive_file" "lambda_metric_alarm" {
   type        = "zip"
   source_dir  = "${path.cwd}/files/lambda/metric-alarm"
   output_path = "${path.module}/artifacts/lmd-cwt-metric-alarm.zip"
