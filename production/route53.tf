@@ -70,7 +70,7 @@ resource "aws_route53_health_check" "main" {
 # Amazon Route 53 Root Domain NS Record
 # ================================================================================
 data "aws_route53_zone" "root" {
-  name         = local.domain
+  name         = local.base_domain
   private_zone = false
 }
 
