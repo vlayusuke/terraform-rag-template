@@ -64,3 +64,25 @@ resource "aws_route53_health_check" "main" {
     Name = "${local.project}-${local.env}-r53-health-check"
   }
 }
+
+
+# ================================================================================
+# Amazon Route 53 Root Domain NS Record
+# ================================================================================
+data "aws_route53_zone" "root" {
+  name         = local.domain
+  private_zone = false
+}
+
+resource "aws_route53_record" "root_ns" {
+  zone_id = data.aws_route53_zone.root.zone_id
+  name    = local.domain
+  type    = "NS"
+  ttl     = 300
+
+  records = aws_route53_zone.main.name_servers
+
+  depends_on = [
+    aws_route53_zone.main,
+  ]
+}
