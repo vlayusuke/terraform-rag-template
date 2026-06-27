@@ -30,7 +30,8 @@ locals {
   ]
 
   # domain
-  domain = "rag.vlayusuke.net"
+  domain      = "rag.vlayusuke.net"
+  base_domain = "vlayusuke.net"
 
   # database info
   database_name             = "tf-rag"
