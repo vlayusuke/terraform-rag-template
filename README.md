@@ -160,6 +160,14 @@ ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_terraform-rag-template -C "Key Pair f
 
 なお、公開鍵のみを`terraform.tfvars`に設定します。秘密鍵の管理は独自でお願いいたします。
 
+### 親ドメインへのDNSのNSレコード追加方法
+
+親ドメインに対して、発行されたDNSのNSレコードを追加する際は、Amazon Route 53のNSレコード発行のタイミングで、ターミナルより以下のコマンドを実行し、親ドメインへの追加をお願いします。`{env}`には、必要に応じて環境名を代入してください。
+
+```bash
+dig +noall +answer {env}.rag.example.org. ns
+```
+
 ## インフラ構成図
 
 このテンプレートで構築が可能なアーキテクチャのインフラ構成図は以下の通りです。
