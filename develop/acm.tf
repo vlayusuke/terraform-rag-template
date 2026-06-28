@@ -9,6 +9,11 @@ resource "aws_acm_certificate" "main_agw" {
     "*.${local.env}.${local.domain}",
   ]
 
+  validation_option {
+    domain_name       = "${local.env}.${local.domain}"
+    validation_domain = "${local.env}.${local.domain}"
+  }
+
   lifecycle {
     create_before_destroy = true
   }
@@ -21,16 +26,17 @@ resource "aws_acm_certificate" "main_agw" {
 resource "aws_route53_record" "main_agw" {
   for_each = {
     for dvoagw in aws_acm_certificate.main_agw.domain_validation_options : dvoagw.domain_name => {
-      name   = dvoagw.resource_record_name
-      record = dvoagw.resource_record_value
-      type   = dvoagw.resource_record_type
+      name    = dvoagw.resource_record_name
+      record  = dvoagw.resource_record_value
+      type    = dvoagw.resource_record_type
+      zone_id = aws_route53_zone.main.zone_id
     }
   }
 
   allow_overwrite = true
   name            = each.value.name
   type            = each.value.type
-  zone_id         = aws_route53_zone.main.zone_id
+  zone_id         = each.value.zone_id
   ttl             = 60
 
   records = [
@@ -56,6 +62,10 @@ resource "aws_acm_certificate" "main_cloudfront" {
   validation_method = "DNS"
   provider          = aws.virginia
 
+  subject_alternative_names = [
+    "*.${local.env}.${local.domain}",
+  ]
+
   validation_option {
     domain_name       = "${local.env}.${local.domain}"
     validation_domain = "${local.env}.${local.domain}"
@@ -73,16 +83,17 @@ resource "aws_acm_certificate" "main_cloudfront" {
 resource "aws_route53_record" "main_cloudfront" {
   for_each = {
     for dvocft in aws_acm_certificate.main_cloudfront.domain_validation_options : dvocft.domain_name => {
-      name   = dvocft.resource_record_name
-      record = dvocft.resource_record_value
-      type   = dvocft.resource_record_type
+      name    = dvocft.resource_record_name
+      record  = dvocft.resource_record_value
+      type    = dvocft.resource_record_type
+      zone_id = aws_route53_zone.main.zone_id
     }
   }
 
   allow_overwrite = true
   name            = each.value.name
   type            = each.value.type
-  zone_id         = aws_route53_zone.main.zone_id
+  zone_id         = each.value.zone_id
   ttl             = 60
 
   records = [
