@@ -3,6 +3,7 @@
 # ================================================================================
 resource "aws_lambda_function" "request_api" {
   function_name    = "lmd-apigw-request-api"
+  description      = "Lambda function for API Gateway Request API"
   role             = aws_iam_role.lambda_request_api.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.request_api.output_path
@@ -36,6 +37,7 @@ resource "aws_lambda_permission" "request_api" {
 # ================================================================================
 resource "aws_lambda_function" "response_api" {
   function_name    = "lmd-apigw-response-api"
+  description      = "Lambda function for API Gateway Response API"
   role             = aws_iam_role.lambda_response_api.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.response_api.output_path
@@ -76,6 +78,7 @@ resource "aws_lambda_permission" "response_api" {
 # ===============================================================================
 resource "aws_lambda_function" "lambda_log_error_alert" {
   function_name    = "lmd-cwt-log-error-alert"
+  description      = "Lambda function for CloudWatch Logs error alert"
   role             = aws_iam_role.lambda_cloudwatch.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.lambda_log_error_alert.output_path
@@ -125,6 +128,7 @@ resource "aws_lambda_permission" "lambda_cloudwatch_app" {
 # ===============================================================================
 resource "aws_lambda_function" "lambda_metric_alarm" {
   function_name    = "lmd-cwt-metric-alarm"
+  description      = "Lambda function for CloudWatch Metric Alarm"
   role             = aws_iam_role.lambda_cloudwatch.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.lambda_metric_alarm.output_path
