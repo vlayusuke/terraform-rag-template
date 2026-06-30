@@ -3,6 +3,7 @@
 # ===============================================================================
 resource "aws_lambda_function" "lambda_log_error_alert_audit" {
   function_name    = "aud-lmd-cwt-log-error-alert"
+  description      = "Lambda function for CloudWatch Logs error alert for audit"
   role             = aws_iam_role.lambda_cloudwatch_audit.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.log_error_alert_audit.output_path
@@ -52,6 +53,7 @@ resource "aws_lambda_permission" "lambda_cloudwatch_audit" {
 # ===============================================================================
 resource "aws_lambda_function" "root_login_monitoring" {
   function_name    = "aud-lmd-root-login-monitoring"
+  description      = "Lambda function for monitoring root login attempts for audit"
   role             = aws_iam_role.lambda_root_login_monitoring.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.root_login_monitoring.output_path
@@ -102,6 +104,7 @@ resource "aws_lambda_permission" "root_login_monitoring" {
 # ===============================================================================
 resource "aws_lambda_function" "lambda_error" {
   function_name    = "aud-lmd-lambda-error"
+  description      = "Lambda function for monitoring Lambda errors for audit"
   role             = aws_iam_role.lambda_error.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.lambda_error.output_path
@@ -151,6 +154,7 @@ resource "aws_lambda_permission" "lambda_error" {
 # ===============================================================================
 resource "aws_lambda_function" "security_notice" {
   function_name    = "aud-lmd-security-notice"
+  description      = "Lambda function for monitoring security notices for audit"
   role             = aws_iam_role.lambda_security_notice.arn
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.security_notice.output_path
