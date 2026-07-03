@@ -24,6 +24,10 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_firehose" 
   filter_pattern  = "?Warning ?Error"
   destination_arn = each.value
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+
+  depends_on = [
+    aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
+  ]
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_lambda" {
@@ -61,6 +65,10 @@ resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_firehose" {
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.bedrock_logs[each.key].arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+
+  depends_on = [
+    aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
+  ]
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_lambda" {
@@ -95,6 +103,10 @@ resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_firehose" {
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.ec2_bastion_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+
+  depends_on = [
+    aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
+  ]
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_lambda" {
@@ -128,6 +140,10 @@ resource "aws_cloudwatch_log_subscription_filter" "sns_to_firehose" {
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.sns_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+
+  depends_on = [
+    aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
+  ]
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "sns_to_lambda" {
@@ -172,6 +188,10 @@ resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_firehose" 
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.lambda_logs[each.key].arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+
+  depends_on = [
+    aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
+  ]
 }
 
 
