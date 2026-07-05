@@ -20,7 +20,7 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_postgresql_logs" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -47,7 +47,7 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_instance_logs" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -74,7 +74,7 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_iam_db_auth_error_logs" 
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -106,7 +106,7 @@ resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -138,7 +138,7 @@ resource "aws_kinesis_firehose_delivery_stream" "bedrock_logs" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -169,7 +169,7 @@ resource "aws_kinesis_firehose_delivery_stream" "sns_logs" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
@@ -200,7 +200,7 @@ resource "aws_kinesis_firehose_delivery_stream" "ec2_bastion_logs" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   tags = {
