@@ -31,7 +31,7 @@ resource "aws_rds_cluster" "aurora_postgres" {
   storage_encrypted            = true
   enable_http_endpoint         = true
   backup_retention_period      = 7
-  preferred_backup_window      = "20:00-21:00"
+  preferred_backup_window      = "21:30-22:30"
   preferred_maintenance_window = "sat:20:00-sat:21:00"
 
   iam_roles = [
