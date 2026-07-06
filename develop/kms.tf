@@ -52,20 +52,6 @@ resource "aws_kms_key_policy" "application" {
 
 data "aws_iam_policy_document" "application_kms_policy" {
   statement {
-    sid    = "ApplicationAssume"
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole",
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "secretsmanager.amazonaws.com",
-      ]
-    }
-  }
-
-  statement {
     sid    = "ApplicationKMS"
     effect = "Allow"
     actions = [
@@ -98,7 +84,6 @@ data "aws_iam_policy_document" "application_kms_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/${local.iam_infra_group}",
       ]
     }
   }
@@ -114,20 +99,6 @@ resource "aws_kms_key_policy" "aurora" {
 }
 
 data "aws_iam_policy_document" "aurora_kms_policy" {
-  statement {
-    sid    = "AuroraAssume"
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole",
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "rds.amazonaws.com",
-      ]
-    }
-  }
-
   statement {
     sid    = "AuroraKMS"
     effect = "Allow"
@@ -161,7 +132,6 @@ data "aws_iam_policy_document" "aurora_kms_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/${local.iam_infra_group}",
       ]
     }
   }
@@ -177,20 +147,6 @@ resource "aws_kms_key_policy" "ebs" {
 }
 
 data "aws_iam_policy_document" "ebs_kms_policy" {
-  statement {
-    sid    = "EBSAssume"
-    effect = "Allow"
-    actions = [
-      "sts:AssumeRole",
-    ]
-    principals {
-      type = "Service"
-      identifiers = [
-        "ebs.amazonaws.com",
-      ]
-    }
-  }
-
   statement {
     sid    = "EBSKMS"
     effect = "Allow"
@@ -224,7 +180,6 @@ data "aws_iam_policy_document" "ebs_kms_policy" {
       type = "AWS"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
-        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/${local.iam_infra_group}",
       ]
     }
   }
