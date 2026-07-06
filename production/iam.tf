@@ -438,28 +438,7 @@ data "aws_iam_policy_document" "amazon_data_firehose" {
       "firehose:PutRecordBatch",
     ]
     resources = [
-      aws_cloudwatch_log_stream.aurora_postgres["postgresql"].arn,
-      "${aws_cloudwatch_log_stream.aurora_postgres["postgresql"].arn}:*",
-      aws_cloudwatch_log_stream.aurora_postgres["instance"].arn,
-      "${aws_cloudwatch_log_stream.aurora_postgres["instance"].arn}:*",
-      aws_cloudwatch_log_stream.aurora_postgres["iam-db-auth-error"].arn,
-      "${aws_cloudwatch_log_stream.aurora_postgres["iam-db-auth-error"].arn}:*",
-      aws_cloudwatch_log_stream.lambda_function[aws_lambda_function.lambda_log_error_alert.function_name].arn,
-      "${aws_cloudwatch_log_stream.lambda_function[aws_lambda_function.lambda_log_error_alert.function_name].arn}:*",
-      aws_cloudwatch_log_stream.lambda_function[aws_lambda_function.lambda_metric_alarm.function_name].arn,
-      "${aws_cloudwatch_log_stream.lambda_function[aws_lambda_function.lambda_metric_alarm.function_name].arn}:*",
-      aws_cloudwatch_log_stream.lambda_function[aws_lambda_function.request_api.function_name].arn,
-      "${aws_cloudwatch_log_stream.lambda_function[aws_lambda_function.request_api.function_name].arn}:*",
-      aws_cloudwatch_log_stream.lambda_function[aws_lambda_function.response_api.function_name].arn,
-      "${aws_cloudwatch_log_stream.lambda_function[aws_lambda_function.response_api.function_name].arn}:*",
-      aws_cloudwatch_log_stream.bedrock["knowledge-base"].arn,
-      "${aws_cloudwatch_log_stream.bedrock["knowledge-base"].arn}:*",
-      aws_cloudwatch_log_stream.sns.arn,
-      "${aws_cloudwatch_log_stream.sns.arn}:*",
-      aws_cloudwatch_log_stream.adf.arn,
-      "${aws_cloudwatch_log_stream.adf.arn}:*",
-      aws_cloudwatch_log_stream.ec2_bastion.arn,
-      "${aws_cloudwatch_log_stream.ec2_bastion.arn}:*",
+      "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:*:log-stream:*",
     ]
   }
 }
