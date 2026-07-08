@@ -34,5 +34,12 @@ data "aws_iam_policy_document" "s3_gateway" {
     resources = [
       "*",
     ]
+
+    principals {
+      type = "AWS"
+      identifiers = [
+        "*",
+      ]
+    }
   }
 }
