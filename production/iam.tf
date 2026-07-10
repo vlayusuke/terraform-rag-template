@@ -297,7 +297,7 @@ resource "aws_iam_role_policy_attachment" "lambda_response_api" {
 
 
 # ===============================================================================
-# AWS IAM for AWS Lambda (CloudWatch Error Alert)
+# AWS IAM for AWS Lambda (House keeping and monitoring)
 # ===============================================================================
 resource "aws_iam_role" "lambda_cloudwatch" {
   name               = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-role"
