@@ -174,15 +174,15 @@ dig +noall +answer {env}.rag.example.org. ns
 
 ### 本番環境
 
-![本番環境](./terraform-rag-template-v1.3-en-prd.png)
+![本番環境](./terraform-rag-template-v1.4-en-prd.png)
 
 ### ステージング環境
 
-![ステージング環境](./terraform-rag-template-v1.3-en-stg.png)
+![ステージング環境](./terraform-rag-template-v1.4-en-stg.png)
 
 ### 開発環境
 
-![開発環境](./terraform-rag-template-v1.3-en-dev.png)
+![開発環境](./terraform-rag-template-v1.4-en-dev.png)
 
 ## コスト
 
