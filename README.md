@@ -57,9 +57,9 @@ Pythonのバージョンについては、macOS上でHomebrewでパッケージ�
 
 | Environmtnt | Resource | Notice           |
 | :---------- | -------: | :--------------- |
-| develop     |      352 | N/A              |
-| staging     |      352 | N/A              |
-| production  |      352 | N/A              |
+| develop     |      364 | N/A              |
+| staging     |      364 | N/A              |
+| production  |      364 | N/A              |
 | audit       |      133 | Each AWS account |
 
 ## 環境構築をする際の注意事項
