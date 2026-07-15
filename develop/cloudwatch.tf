@@ -615,6 +615,39 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_output_token_count_high" {
 
 
 # ================================================================================
+# Amazon CloudWatch Metrics for Amazon CloudWatch Synthetics Canary Check Request API
+# ================================================================================
+resource "aws_cloudwatch_metric_alarm" "synthetics_canary_check_request_api_failed" {
+  alarm_name          = "${local.project}-${local.env}-cwt-syn-canary-check-request-api-failed-alarm"
+  comparison_operator = "LessThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "SuccessPercent"
+  namespace           = "CloudWatchSynthetics"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 90
+  treat_missing_data  = "notBreaching"
+  alarm_description   = "Alarm when the Synthetics Canary check request API success percent is less than 90%"
+
+  dimensions = {
+    CanaryName = aws_synthetics_canary.check_request_api.name
+  }
+
+  alarm_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  ok_actions = [
+    aws_sns_topic.metric_alarm.arn,
+  ]
+
+  tags = {
+    Name = "${local.project}-${local.env}-cwt-syn-canary-check-request-api-failed-alarm"
+  }
+}
+
+
+# ================================================================================
 # Amazon CloudFront Access Logs V2 to S3 via Amazon CloudWatch Log Delivery
 # ================================================================================
 resource "aws_cloudwatch_log_delivery_source" "cloudfront_access_logs" {
