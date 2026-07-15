@@ -19,15 +19,18 @@ resource "aws_synthetics_group_association" "check_request_api" {
 # Amazon CloudWatch Synthetics Canary for Check Request API Monitoring
 # ===============================================================================
 resource "aws_synthetics_canary" "check_request_api" {
-  name                 = "${local.project}-${local.env}-cwt-syn-check-request-api"
-  artifact_s3_location = aws_s3_bucket.synthetics_artifacts.arn
-  execution_role_arn   = aws_iam_role.cloudwatch_synthetics.arn
-  handler              = "canary_check_request_api.function.canary_handler"
-  runtime_version      = "syn-python-selenium-11.0"
-  zip_file             = "artifacts/canary-check-request-api.zip"
+  name                     = "${local.project}-${local.env}-cwt-syn-check-request-api"
+  artifact_s3_location     = aws_s3_bucket.synthetics_artifacts.arn
+  execution_role_arn       = aws_iam_role.cloudwatch_synthetics.arn
+  handler                  = "canary_check_request_api.function.canary_handler"
+  runtime_version          = "syn-python-selenium-11.1"
+  zip_file                 = "artifacts/canary-check-request-api.zip"
+  success_retention_period = 31
+  failure_retention_period = 31
 
   schedule {
-    expression = "rate(5 minutes)"
+    duration_in_seconds = 0
+    expression          = "rate(3 minutes)"
   }
 
   artifact_config {
@@ -35,6 +38,12 @@ resource "aws_synthetics_canary" "check_request_api" {
       encryption_mode = "SSE_KMS"
       kms_key_arn     = aws_kms_key.synthetics.arn
     }
+  }
+
+  run_config {
+    active_tracing     = false
+    timeout_in_seconds = 60
+    ephemeral_storage  = 2048
   }
 
   tags = {
