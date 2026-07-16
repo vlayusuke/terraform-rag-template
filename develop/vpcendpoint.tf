@@ -5,6 +5,16 @@ resource "aws_vpc_endpoint" "s3_gateway" {
   vpc_id            = aws_vpc.main.id
   service_name      = "com.amazonaws.${local.region}.s3"
   vpc_endpoint_type = "Gateway"
+  ip_address_type   = "ipv4"
+
+  route_table_ids = [
+    for route_table in aws_route_table.main_private :
+    route_table.id
+  ]
+
+  dns_options {
+    dns_record_ip_type = "ipv4"
+  }
 
   tags = {
     Name = "${local.project}-${local.env}-vpce-s3"
