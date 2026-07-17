@@ -26,6 +26,15 @@ resource "aws_flow_log" "main_s3" {
   log_destination_type = "s3"
   traffic_type         = "ALL"
   vpc_id               = aws_vpc.main.id
+
+  destination_options {
+    file_format        = "plain-text"
+    per_hour_partition = true
+  }
+
+  tags = {
+    Name = "${local.project}-${local.env}-vpc-flow-log"
+  }
 }
 
 
@@ -121,9 +130,10 @@ resource "aws_route_table_association" "main_private" {
 # NAT Gateway
 # ================================================================================
 resource "aws_nat_gateway" "main" {
-  count         = length(local.availability_zones)
-  subnet_id     = aws_subnet.main_public[count.index].id
-  allocation_id = aws_eip.main[count.index].id
+  count             = length(local.availability_zones)
+  subnet_id         = aws_subnet.main_public[count.index].id
+  allocation_id     = aws_eip.main[count.index].id
+  connectivity_type = "public"
 
   tags = {
     Name = "${local.project}-${local.env}-ngw-${local.availability_zones[count.index]}"
