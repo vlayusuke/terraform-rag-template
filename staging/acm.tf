@@ -4,6 +4,7 @@
 resource "aws_acm_certificate" "main_agw" {
   domain_name       = "${local.env}.${local.domain}"
   validation_method = "DNS"
+  key_algorithm     = "RSA_2048"
 
   subject_alternative_names = [
     "*.${local.env}.${local.domain}",
@@ -11,7 +12,7 @@ resource "aws_acm_certificate" "main_agw" {
 
   validation_option {
     domain_name       = "${local.env}.${local.domain}"
-    validation_domain = "${local.env}.${local.domain}"
+    validation_domain = local.domain
   }
 
   lifecycle {
@@ -58,9 +59,10 @@ resource "aws_acm_certificate_validation" "main_agw" {
 # AWS Certificate Manager for Amazon CloudFront
 # ===============================================================================
 resource "aws_acm_certificate" "main_cloudfront" {
+  provider          = aws.virginia
   domain_name       = "${local.env}.${local.domain}"
   validation_method = "DNS"
-  provider          = aws.virginia
+  key_algorithm     = "RSA_2048"
 
   subject_alternative_names = [
     "*.${local.env}.${local.domain}",
@@ -68,7 +70,7 @@ resource "aws_acm_certificate" "main_cloudfront" {
 
   validation_option {
     domain_name       = "${local.env}.${local.domain}"
-    validation_domain = "${local.env}.${local.domain}"
+    validation_domain = local.domain
   }
 
   lifecycle {
