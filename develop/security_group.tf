@@ -50,7 +50,6 @@ resource "aws_security_group" "rds" {
     ]
   }
 
-
   ingress {
     description = "Allow PostgreSQL traffic from EC2 Instance Connector Endpoint"
     from_port   = 5432
@@ -58,6 +57,16 @@ resource "aws_security_group" "rds" {
     protocol    = "tcp"
     security_groups = [
       aws_security_group.eic.id,
+    ]
+  }
+
+  ingress {
+    description = "Allow PostgreSQL traffic from Amazon Bedrock"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = [
+      local.default_gateway_cidr,
     ]
   }
 
