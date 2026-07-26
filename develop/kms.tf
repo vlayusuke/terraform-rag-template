@@ -247,3 +247,66 @@ data "aws_iam_policy_document" "synthetics_kms_policy" {
     }
   }
 }
+
+
+# ===============================================================================
+# AWS KMS for Amazon Bedrock
+# ===============================================================================
+resource "aws_kms_key" "bedrock" {
+  description             = "${local.project}-${local.env}-kms-bedrock-key"
+  enable_key_rotation     = true
+  key_usage               = "ENCRYPT_DECRYPT"
+  deletion_window_in_days = 7
+
+  tags = {
+    Name = "${local.project}-${local.env}-kms-bedrock-key"
+  }
+}
+
+
+# ===============================================================================
+# AWS KMS Key Policy for Amazon Bedrock
+# ===============================================================================
+resource "aws_kms_key_policy" "bedrock" {
+  key_id = aws_kms_key.bedrock.key_id
+  policy = data.aws_iam_policy_document.bedrock_kms_policy.json
+}
+
+data "aws_iam_policy_document" "bedrock_kms_policy" {
+  statement {
+    sid    = "BedrockKMS"
+    effect = "Allow"
+    actions = [
+      "kms:Encrypt",
+      "kms:Decrypt",
+      "kms:GenerateDataKey*",
+      "kms:DescribeKey",
+    ]
+    resources = [
+      aws_kms_key.bedrock.arn,
+    ]
+    principals {
+      type = "Service"
+      identifiers = [
+        "bedrock.amazonaws.com",
+      ]
+    }
+  }
+
+  statement {
+    sid    = "AllowAccountAccess"
+    effect = "Allow"
+    actions = [
+      "kms:*",
+    ]
+    resources = [
+      aws_kms_key.bedrock.arn,
+    ]
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+  }
+}
