@@ -98,11 +98,24 @@ resource "aws_bedrockagent_agent" "bedrock_agent" {
   description                 = "Amazon Bedrock Agent for ${local.project}-${local.env}"
   foundation_model            = data.aws_bedrock_foundation_model.bedrock_agent_model.model_id
   region                      = local.region
+  customer_encryption_key_arn = aws_kms_key.bedrock.arn
   idle_session_ttl_in_seconds = 600
+  prepare_agent               = true
   instruction                 = <<EOT
     You are a helpful assistant for providing information about AWS services.
     When you receive a question, please provide an answer based on the information you have.
   EOT
+
+  memory_configuration {
+    storage_days = 7
+    enabled_memory_types = [
+      "SESSION_SUMMARY",
+    ]
+
+    session_summary_configuration {
+      max_recent_sessions = 100
+    }
+  }
 
   guardrail_configuration = [
     {
