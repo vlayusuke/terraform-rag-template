@@ -134,10 +134,12 @@ data "aws_bedrock_foundation_model" "bedrock_agent_model" {
 }
 
 resource "aws_bedrockagent_agent_action_group" "bedrock_agent_action_group" {
-  action_group_name          = "invoke-api-action-group"
-  agent_id                   = aws_bedrockagent_agent.bedrock_agent.id
-  agent_version              = "DRAFT"
-  skip_resource_in_use_check = true
+  action_group_name             = "${local.project}-${local.env}-brk-invoke-api-action-group"
+  description                   = "Amazon Bedrock Agent Action Group for ${local.project}-${local.env}"
+  agent_id                      = aws_bedrockagent_agent.bedrock_agent.id
+  parent_action_group_signature = "AMAZON.UserInput"
+  agent_version                 = "DRAFT"
+  skip_resource_in_use_check    = true
 
   action_group_executor {
     lambda = aws_lambda_function.request_api.arn
@@ -148,10 +150,14 @@ resource "aws_bedrockagent_agent_action_group" "bedrock_agent_action_group" {
   }
 }
 
-# less than 10 characters [0-9a-zA-Z]+
 resource "aws_bedrockagent_agent_alias" "bedrock_agent" {
+  agent_alias_name = "${local.project}-${local.env}-brk-request-api-alias"
+  description      = "Amazon Bedrock Agent Alias for ${local.project}-${local.env}"
   agent_id         = aws_bedrockagent_agent.bedrock_agent.id
-  agent_alias_name = "requestapi"
+
+  tags = {
+    Name = "${local.project}-${local.env}-brk-request-api-alias"
+  }
 }
 
 resource "aws_bedrockagent_prompt" "bedrock_prompt" {
