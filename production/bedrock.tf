@@ -135,7 +135,6 @@ data "aws_bedrock_foundation_model" "bedrock_agent_model" {
 
 resource "aws_bedrockagent_agent_action_group" "bedrock_agent_action_group" {
   action_group_name             = "${local.project}-${local.env}-brk-invoke-api-action-group"
-  description                   = "Amazon Bedrock Agent Action Group for ${local.project}-${local.env}"
   agent_id                      = aws_bedrockagent_agent.bedrock_agent.id
   parent_action_group_signature = "AMAZON.UserInput"
   agent_version                 = "DRAFT"
