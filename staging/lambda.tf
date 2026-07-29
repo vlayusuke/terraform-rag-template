@@ -8,9 +8,16 @@ resource "aws_lambda_function" "request_api" {
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.request_api.output_path
   source_code_hash = data.archive_file.request_api.output_base64sha256
+  kms_key_arn      = aws_kms_key.lambda.arn
   runtime          = "python3.14"
   timeout          = 30
   memory_size      = 128
+
+  logging_config {
+    application_log_level = "INFO"
+    log_format            = "JSON"
+    log_group             = "/aws/lambda/${aws_lambda_function.request_api.function_name}"
+  }
 
   tags = {
     Name = "${local.project}-${local.env}-lmd-apigw-request-api"
@@ -42,6 +49,7 @@ resource "aws_lambda_function" "response_api" {
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.response_api.output_path
   source_code_hash = data.archive_file.response_api.output_base64sha256
+  kms_key_arn      = aws_kms_key.lambda.arn
   runtime          = "python3.14"
   timeout          = 30
   memory_size      = 128
@@ -51,6 +59,12 @@ resource "aws_lambda_function" "response_api" {
       AGENT_ID       = aws_bedrockagent_agent.bedrock_agent.id
       AGENT_ALIAS_ID = aws_bedrockagent_agent_alias.bedrock_agent.agent_alias_id
     }
+  }
+
+  logging_config {
+    application_log_level = "INFO"
+    log_format            = "JSON"
+    log_group             = "/aws/lambda/${aws_lambda_function.response_api.function_name}"
   }
 
   tags = {
@@ -83,6 +97,7 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.lambda_log_error_alert.output_path
   source_code_hash = data.archive_file.lambda_log_error_alert.output_base64sha256
+  kms_key_arn      = aws_kms_key.lambda.arn
   runtime          = "python3.14"
   timeout          = 10
   memory_size      = 128
@@ -95,6 +110,12 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
     variables = {
       hook_url = var.hook_url_app
     }
+  }
+
+  logging_config {
+    application_log_level = "INFO"
+    log_format            = "JSON"
+    log_group             = "/aws/lambda/${aws_lambda_function.lambda_log_error_alert.function_name}"
   }
 
   lifecycle {
@@ -133,6 +154,7 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
   handler          = "lambda_function.lambda_handler"
   filename         = data.archive_file.lambda_metric_alarm.output_path
   source_code_hash = data.archive_file.lambda_metric_alarm.output_base64sha256
+  kms_key_arn      = aws_kms_key.lambda.arn
   runtime          = "python3.14"
   timeout          = 10
   memory_size      = 128
@@ -146,6 +168,12 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
       hook_url = var.hook_url_app
       region   = local.region
     }
+  }
+
+  logging_config {
+    application_log_level = "INFO"
+    log_format            = "JSON"
+    log_group             = "/aws/lambda/${aws_lambda_function.lambda_metric_alarm.function_name}"
   }
 
   lifecycle {
