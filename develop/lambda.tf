@@ -13,10 +13,10 @@ resource "aws_lambda_function" "request_api" {
   timeout          = 30
   memory_size      = 128
 
-  logging_config {
-    application_log_level = "INFO"
-    log_format            = "JSON"
-    log_group             = "/aws/lambda/${aws_lambda_function.request_api.function_name}"
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,
+    ]
   }
 
   tags = {
@@ -61,10 +61,10 @@ resource "aws_lambda_function" "response_api" {
     }
   }
 
-  logging_config {
-    application_log_level = "INFO"
-    log_format            = "JSON"
-    log_group             = "/aws/lambda/${aws_lambda_function.response_api.function_name}"
+  lifecycle {
+    ignore_changes = [
+      source_code_hash,
+    ]
   }
 
   tags = {
@@ -110,12 +110,6 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
     variables = {
       hook_url = var.hook_url_app
     }
-  }
-
-  logging_config {
-    application_log_level = "INFO"
-    log_format            = "JSON"
-    log_group             = "/aws/lambda/${aws_lambda_function.lambda_log_error_alert.function_name}"
   }
 
   lifecycle {
@@ -168,12 +162,6 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
       hook_url = var.hook_url_app
       region   = local.region
     }
-  }
-
-  logging_config {
-    application_log_level = "INFO"
-    log_format            = "JSON"
-    log_group             = "/aws/lambda/${aws_lambda_function.lambda_metric_alarm.function_name}"
   }
 
   lifecycle {
