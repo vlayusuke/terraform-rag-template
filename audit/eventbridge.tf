@@ -123,17 +123,20 @@ resource "aws_cloudwatch_event_rule" "cloudtrail" {
       "eventSource" : [
         "signin.amazonaws.com",
         "monitoring.amazonaws.com",
+        "cloudfront.amazonaws.com",
         "iam.amazonaws.com",
         "ec2.amazonaws.com",
         "bedrock.amazonaws.com",
         "rds.amazonaws.com",
         "apigateway.amazonaws.com",
         "lambda.amazonaws.com",
+        "kms.amazonaws.com",
         "s3.amazonaws.com",
         "sns.amazonaws.com",
         "ssm.amazonaws.com",
         "secretsmanager.amazonaws.com",
         "logs.amazonaws.com",
+        "wafv2.amazonaws.com",
       ]
     }
   })
