@@ -60,7 +60,7 @@ Pythonのバージョンについては、macOS上でHomebrewでパッケージ�
 | develop     |      376 | N/A              |
 | staging     |      376 | N/A              |
 | production  |      376 | N/A              |
-| audit       |      133 | Each AWS account |
+| audit       |      135 | Each AWS account |
 
 ## 環境構築をする際の注意事項
 
