@@ -5,6 +5,7 @@ resource "aws_cloudwatch_log_group" "aurora_postgres" {
   for_each          = local.aurora_cloudwatch_log_group
   name              = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-cwtlog"
   retention_in_days = local.retention_in_days
+  log_group_class   = "STANDARD"
 
   tags = {
     Name = "/aws/rds/cluster/${aws_rds_cluster.aurora_postgres.cluster_identifier}/${each.key}-cwtlog"
@@ -24,6 +25,7 @@ resource "aws_cloudwatch_log_subscription_filter" "aurora_postgres_to_firehose" 
   filter_pattern  = "?Warning ?Error"
   destination_arn = each.value
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+  distribution    = "ByLogStream"
 
   depends_on = [
     aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
@@ -46,6 +48,7 @@ resource "aws_cloudwatch_log_group" "bedrock" {
   for_each          = local.bedrock_cloudwatch_log_group
   name              = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-cwlog"
   retention_in_days = local.retention_in_days
+  log_group_class   = "STANDARD"
 
   tags = {
     Name = "/aws/bedrock/${aws_bedrockagent_knowledge_base.knowledge_base.name}/${each.key}-cwlog"
@@ -65,6 +68,7 @@ resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_firehose" {
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.bedrock_logs[each.key].arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+  distribution    = "ByLogStream"
 
   depends_on = [
     aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
@@ -86,6 +90,7 @@ resource "aws_cloudwatch_log_subscription_filter" "bedrock_to_lambda" {
 resource "aws_cloudwatch_log_group" "ec2_bastion" {
   name              = "${local.project}-${local.env}-cwt-ec2-bastion-cwlog"
   retention_in_days = local.retention_in_days
+  log_group_class   = "STANDARD"
 
   tags = {
     Name = "${local.project}-${local.env}-cwt-ec2-bastion-cwlog"
@@ -103,6 +108,7 @@ resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_firehose" {
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.ec2_bastion_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+  distribution    = "ByLogStream"
 
   depends_on = [
     aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
@@ -123,6 +129,7 @@ resource "aws_cloudwatch_log_subscription_filter" "ec2_bastion_to_lambda" {
 resource "aws_cloudwatch_log_group" "sns" {
   name              = "${local.project}-${local.env}-cwt-sns-cwlog"
   retention_in_days = local.retention_in_days
+  log_group_class   = "STANDARD"
 
   tags = {
     Name = "${local.project}-${local.env}-cwt-sns-cwlog"
@@ -140,6 +147,7 @@ resource "aws_cloudwatch_log_subscription_filter" "sns_to_firehose" {
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.sns_logs.arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+  distribution    = "ByLogStream"
 
   depends_on = [
     aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
@@ -161,6 +169,7 @@ resource "aws_cloudwatch_log_group" "lambda_function" {
   for_each          = local.lambda_functions
   name              = "/aws/lambda/${each.key}-cwtlog"
   retention_in_days = local.retention_in_days
+  log_group_class   = "STANDARD"
 
   tags = {
     Name = "/aws/lambda/${each.key}-cwtlog"
@@ -188,6 +197,7 @@ resource "aws_cloudwatch_log_subscription_filter" "lambda_function_to_firehose" 
   filter_pattern  = ""
   destination_arn = aws_kinesis_firehose_delivery_stream.lambda_logs[each.key].arn
   role_arn        = aws_iam_role.cloudwatch_logs_to_amazon_data_firehose.arn
+  distribution    = "ByLogStream"
 
   depends_on = [
     aws_iam_role_policy_attachment.cloudwatch_logs_to_amazon_data_firehose,
