@@ -228,6 +228,7 @@ resource "aws_cloudwatch_log_stream" "adf" {
 # ===============================================================================
 resource "aws_cloudwatch_metric_alarm" "aurora_postgres_acuutilization_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-aur-serverless-acuutilization-high-alarm"
+  alarm_description   = "Alarm when the Aurora Serverless v2 ACUUtilization is greater than or equal to 80%"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "ACUUtilization"
@@ -256,6 +257,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_acuutilization_high" {
 
 resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
   alarm_name          = "${local.project}-${local.env}-cwt-aur-serverless-database-capacity-alarm"
+  alarm_description   = "Alarm when the Aurora Serverless v2 ServerlessDatabaseCapacity is less than or equal to 1"
   comparison_operator = "LessThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "ServerlessDatabaseCapacity"
@@ -288,6 +290,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
 # ===============================================================================
 resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
   alarm_name          = "${local.project}-${local.env}-cwt-lmd-errors-alarm"
+  alarm_description   = "Alarm when the AWS Lambda Errors is greater than or equal to 1"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   metric_name         = "Errors"
@@ -312,6 +315,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
 
 resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
   alarm_name          = "${local.project}-${local.env}-cwt-lmd-throttles-alarm"
+  alarm_description   = "Alarm when the AWS Lambda Throttles is greater than or equal to 1"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   metric_name         = "Throttles"
@@ -336,6 +340,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
 
 resource "aws_cloudwatch_metric_alarm" "lambda_concurrent_executions" {
   alarm_name          = "${local.project}-${local.env}-cwt-lmd-concurrent-executions-alarm"
+  alarm_description   = "Alarm when the AWS Lambda ConcurrentExecutions is greater than or equal to 80% of the service quota"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 1
   metric_name         = "ConcurrentExecutions"
@@ -369,6 +374,7 @@ data "aws_servicequotas_service_quota" "lambda_concurrent_executions" {
 # ===============================================================================
 resource "aws_cloudwatch_metric_alarm" "ec2_bastion_cpu_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-ec2-bastion-cpu-high-alarm"
+  alarm_description   = "Alarm when the Amazon EC2 Bastion CPUUtilization is greater than or equal to 80%"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "CPUUtilization"
@@ -397,6 +403,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_bastion_cpu_high" {
 
 resource "aws_cloudwatch_metric_alarm" "ec2_bastion_memory_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-ec2-bastion-memory-high-alarm"
+  alarm_description   = "Alarm when the Amazon EC2 Bastion MemoryUtilization is greater than or equal to 80%"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "MemoryUtilization"
@@ -425,6 +432,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_bastion_memory_high" {
 
 resource "aws_cloudwatch_metric_alarm" "ec2_bastion_disk_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-ec2-bastion-disk-high-alarm"
+  alarm_description   = "Alarm when the Amazon EC2 Bastion DiskUtilization is greater than or equal to 80%"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "DiskUtilization"
@@ -453,6 +461,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_bastion_disk_high" {
 
 resource "aws_cloudwatch_metric_alarm" "ec2_bastion_status_check_failed" {
   alarm_name          = "${local.project}-${local.env}-cwt-ec2-bastion-status-check-failed-alarm"
+  alarm_description   = "Alarm when the Amazon EC2 Bastion StatusCheckFailed is greater than or equal to 1"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "StatusCheckFailed"
@@ -485,6 +494,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_bastion_status_check_failed" {
 # ===============================================================================
 resource "aws_cloudwatch_metric_alarm" "bedrock_latency_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-brk-latency-high-alarm"
+  alarm_description   = "Alarm when the Amazon Bedrock Latency is greater than or equal to 6000 milliseconds"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "Latency"
@@ -513,6 +523,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_latency_high" {
 
 resource "aws_cloudwatch_metric_alarm" "bedrock_invocation_count_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-brk-invocation-count-high-alarm"
+  alarm_description   = "Alarm when the Amazon Bedrock InvocationCount is greater than or equal to 36000000"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "InvocationCount"
@@ -541,6 +552,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_invocation_count_high" {
 
 resource "aws_cloudwatch_metric_alarm" "bedrock_error_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-brk-error-high-alarm"
+  alarm_description   = "Alarm when the Amazon Bedrock Error is greater than or equal to 1"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "Error"
@@ -569,6 +581,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_error_high" {
 
 resource "aws_cloudwatch_metric_alarm" "bedrock_input_token_count_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-brk-input-token-count-high-alarm"
+  alarm_description   = "Alarm when the Amazon Bedrock InputTokenCount is greater than or equal to 100000"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "InputTokenCount"
@@ -597,6 +610,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_input_token_count_high" {
 
 resource "aws_cloudwatch_metric_alarm" "bedrock_output_token_count_high" {
   alarm_name          = "${local.project}-${local.env}-cwt-brk-output-token-count-high-alarm"
+  alarm_description   = "Alarm when the Amazon Bedrock OutputTokenCount is greater than or equal to 100000"
   comparison_operator = "GreaterThanOrEqualToThreshold"
   evaluation_periods  = 2
   metric_name         = "OutputTokenCount"
@@ -629,6 +643,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_output_token_count_high" {
 # ================================================================================
 resource "aws_cloudwatch_metric_alarm" "synthetics_canary_check_request_api_failed" {
   alarm_name          = "${local.project}-${local.env}-cwt-syn-canary-check-request-api-failed-alarm"
+  alarm_description   = "Alarm when the Synthetics Canary check request API success percent is less than 90%"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = 1
   metric_name         = "SuccessPercent"
@@ -637,7 +652,6 @@ resource "aws_cloudwatch_metric_alarm" "synthetics_canary_check_request_api_fail
   statistic           = "Average"
   threshold           = 90
   treat_missing_data  = "notBreaching"
-  alarm_description   = "Alarm when the Synthetics Canary check request API success percent is less than 90%"
 
   dimensions = {
     CanaryName = aws_synthetics_canary.check_request_api.name
