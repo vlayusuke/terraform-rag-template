@@ -26,14 +26,21 @@ resource "aws_guardduty_detector_feature" "ebs_malware_protection" {
   status      = "ENABLED"
 }
 
+resource "aws_guardduty_detector_feature" "lambda_network_logs" {
+  detector_id = aws_guardduty_detector.main.id
+  name        = "LAMBDA_NETWORK_LOGS"
+  status      = "ENABLED"
+}
+
 
 # ===============================================================================
 # Amazon GuardDuty Publishing Destination
 # ===============================================================================
 resource "aws_guardduty_publishing_destination" "main" {
-  detector_id     = aws_guardduty_detector.main.id
-  destination_arn = aws_s3_bucket.guardduty_logs.arn
-  kms_key_arn     = aws_kms_key.guardduty.arn
+  detector_id      = aws_guardduty_detector.main.id
+  destination_arn  = aws_s3_bucket.guardduty_logs.arn
+  kms_key_arn      = aws_kms_key.guardduty.arn
+  destination_type = "S3"
 
   depends_on = [
     aws_s3_bucket_policy.guardduty_logs,
