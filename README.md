@@ -42,7 +42,7 @@ Pythonのバージョンについては、macOS上でHomebrewでパッケージ�
 | Resources                  | Version |
 | :------------------------- | ------: |
 | Terraform                  | 1.15.8  |
-| AWS Provider               | 6.57.1  |
+| AWS Provider               | 6.58.0  |
 | AWS Cloud Control Provider | 1.95.0  |
 
 ### AWS Lambda関数に使用しているPythonのruntime
@@ -60,7 +60,7 @@ Pythonのバージョンについては、macOS上でHomebrewでパッケージ�
 | develop     |      376 | N/A              |
 | staging     |      376 | N/A              |
 | production  |      376 | N/A              |
-| audit       |      135 | Each AWS account |
+| audit       |      136 | Each AWS account |
 
 ## 環境構築をする際の注意事項
 
