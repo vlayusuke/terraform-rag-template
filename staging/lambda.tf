@@ -13,11 +13,19 @@ resource "aws_lambda_function" "request_api" {
   timeout          = 30
   memory_size      = 128
 
+  architectures = [
+    "arm64",
+  ]
+
   lifecycle {
     ignore_changes = [
       source_code_hash,
     ]
   }
+
+  depends_on = [
+    aws_kms_key.lambda,
+  ]
 
   tags = {
     Name = "${local.project}-${local.env}-lmd-apigw-request-api"
@@ -54,12 +62,20 @@ resource "aws_lambda_function" "response_api" {
   timeout          = 30
   memory_size      = 128
 
+  architectures = [
+    "arm64",
+  ]
+
   environment {
     variables = {
       AGENT_ID       = aws_bedrockagent_agent.bedrock_agent.id
       AGENT_ALIAS_ID = aws_bedrockagent_agent_alias.bedrock_agent.agent_alias_id
     }
   }
+
+  depends_on = [
+    aws_kms_key.lambda,
+  ]
 
   lifecycle {
     ignore_changes = [
@@ -112,6 +128,10 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
     }
   }
 
+  depends_on = [
+    aws_kms_key.lambda,
+  ]
+
   lifecycle {
     ignore_changes = [
       source_code_hash,
@@ -163,6 +183,10 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
       region   = local.region
     }
   }
+
+  depends_on = [
+    aws_kms_key.lambda,
+  ]
 
   lifecycle {
     ignore_changes = [
