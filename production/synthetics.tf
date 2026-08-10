@@ -46,6 +46,10 @@ resource "aws_synthetics_canary" "check_request_api" {
     ephemeral_storage  = 2048
   }
 
+  depends_on = [
+    aws_kms_key.synthetics,
+  ]
+
   tags = {
     Name = "${local.project}-${local.env}-cwt-syn-check-request-api"
   }
