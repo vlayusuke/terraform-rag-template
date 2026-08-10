@@ -47,6 +47,7 @@ resource "aws_synthetics_canary" "check_request_api" {
   }
 
   depends_on = [
+    aws_iam_role.cloudwatch_synthetics,
     aws_kms_key.synthetics,
   ]
 
