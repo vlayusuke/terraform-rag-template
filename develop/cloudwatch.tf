@@ -237,6 +237,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_acuutilization_high" {
   statistic           = "Maximum"
   threshold           = 80
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     DBClusterIdentifier = aws_rds_cluster.aurora_postgres.cluster_identifier
@@ -266,6 +267,7 @@ resource "aws_cloudwatch_metric_alarm" "aurora_postgres_database_capacity" {
   statistic           = "Maximum"
   threshold           = 1
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     DBClusterIdentifier = aws_rds_cluster.aurora_postgres.cluster_identifier
@@ -299,6 +301,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
   statistic           = "Sum"
   threshold           = 1
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 1
 
   alarm_actions = [
     aws_sns_topic.metric_alarm.arn,
@@ -324,6 +327,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
   statistic           = "Sum"
   threshold           = 1
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 1
 
   alarm_actions = [
     aws_sns_topic.metric_alarm.arn,
@@ -349,6 +353,7 @@ resource "aws_cloudwatch_metric_alarm" "lambda_concurrent_executions" {
   statistic           = "Maximum"
   threshold           = data.aws_servicequotas_service_quota.lambda_concurrent_executions.value * 0.8
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 1
 
   alarm_actions = [
     aws_sns_topic.metric_alarm.arn,
@@ -383,6 +388,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_bastion_cpu_high" {
   statistic           = "Maximum"
   threshold           = 80
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     InstanceId = aws_instance.ec2_bastion.id
@@ -412,6 +418,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_bastion_memory_high" {
   statistic           = "Maximum"
   threshold           = 80
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     InstanceId = aws_instance.ec2_bastion.id
@@ -441,6 +448,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_bastion_disk_high" {
   statistic           = "Maximum"
   threshold           = 80
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     InstanceId = aws_instance.ec2_bastion.id
@@ -470,6 +478,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_bastion_status_check_failed" {
   statistic           = "Minimum"
   threshold           = 1
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     InstanceId = aws_instance.ec2_bastion.id
@@ -503,6 +512,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_latency_high" {
   statistic           = "Minimum"
   threshold           = 6000
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     ModelId = local.bedrock_knowledge_base_model
@@ -532,6 +542,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_invocation_count_high" {
   statistic           = "Minimum"
   threshold           = 36000000
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     ModelId = local.bedrock_knowledge_base_model
@@ -561,6 +572,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_error_high" {
   statistic           = "Minimum"
   threshold           = 1
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     ModelId = local.bedrock_knowledge_base_model
@@ -590,6 +602,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_input_token_count_high" {
   statistic           = "Minimum"
   threshold           = 100000
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     ModelId = local.bedrock_knowledge_base_model
@@ -619,6 +632,7 @@ resource "aws_cloudwatch_metric_alarm" "bedrock_output_token_count_high" {
   statistic           = "Minimum"
   threshold           = 100000
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     ModelId = local.bedrock_knowledge_base_model
@@ -645,13 +659,14 @@ resource "aws_cloudwatch_metric_alarm" "synthetics_canary_check_request_api_fail
   alarm_name          = "${local.project}-${local.env}-cwt-syn-canary-check-request-api-failed-alarm"
   alarm_description   = "Alarm when the Synthetics Canary check request API success percent is less than 90%"
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = 1
+  evaluation_periods  = 2
   metric_name         = "SuccessPercent"
   namespace           = "CloudWatchSynthetics"
   period              = 300
   statistic           = "Average"
   threshold           = 90
   treat_missing_data  = "notBreaching"
+  datapoints_to_alarm = 2
 
   dimensions = {
     CanaryName = aws_synthetics_canary.check_request_api.name
