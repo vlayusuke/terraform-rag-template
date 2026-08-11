@@ -50,8 +50,8 @@ resource "aws_api_gateway_method" "request_api_method" {
   }
 }
 
-resource "aws_api_gateway_request_validator" "validator" {
-  name                        = "validator"
+resource "aws_api_gateway_request_validator" "request_api_validator" {
+  name                        = "request_api_validator"
   rest_api_id                 = aws_api_gateway_rest_api.request_api.id
   validate_request_parameters = true
 }
@@ -194,8 +194,8 @@ resource "aws_api_gateway_method_response" "response_api_method_post_500" {
 }
 
 # Add Request Validator
-resource "aws_api_gateway_request_validator" "validator" {
-  name                        = "varidator"
+resource "aws_api_gateway_request_validator" "response_api_validator" {
+  name                        = "response_api_validator"
   rest_api_id                 = aws_api_gateway_rest_api.response_api.id
   validate_request_parameters = true
 }
