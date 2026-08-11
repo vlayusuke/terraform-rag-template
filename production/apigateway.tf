@@ -1,4 +1,102 @@
 # ===============================================================================
+# Amazon API Gateway (REST API / Request API)
+# ===============================================================================
+resource "aws_api_gateway_rest_api" "request_api" {
+  name        = "${local.project}-${local.env}-agw-request-api"
+  description = "Amazon API Gateway for ${local.project}-${local.env} invoking AWS Lambda functions"
+
+  tags = {
+    Name = "${local.project}-${local.env}-agw-request-api"
+  }
+}
+
+resource "aws_api_gateway_domain_name" "request_api" {
+  domain_name              = "*.${local.domain}"
+  regional_certificate_arn = aws_acm_certificate.main_agw.arn
+  security_policy          = "TLS_1_2"
+
+  endpoint_configuration {
+    types = [
+      "REGIONAL",
+    ]
+  }
+
+  tags = {
+    Name = "${local.project}-${local.env}-agw-domain-name"
+  }
+}
+
+resource "aws_api_gateway_base_path_mapping" "request_api" {
+  api_id      = aws_api_gateway_rest_api.request_api.id
+  stage_name  = aws_api_gateway_stage.request_api_stage.stage_name
+  domain_name = aws_api_gateway_domain_name.request_api.domain_name
+}
+
+resource "aws_api_gateway_resource" "request_api_resource" {
+  rest_api_id = aws_api_gateway_rest_api.request_api.id
+  parent_id   = aws_api_gateway_rest_api.request_api.root_resource_id
+  path_part   = "request"
+}
+
+resource "aws_api_gateway_method" "request_api_method" {
+  rest_api_id      = aws_api_gateway_rest_api.request_api.id
+  resource_id      = aws_api_gateway_resource.request_api_resource.id
+  http_method      = "POST"
+  authorization    = "NONE"
+  api_key_required = false
+
+  request_parameters = {
+    "method.request.querystring.key" = true
+  }
+}
+
+resource "aws_api_gateway_request_validator" "validator" {
+  name                        = "validator"
+  rest_api_id                 = aws_api_gateway_rest_api.request_api.id
+  validate_request_parameters = true
+}
+
+resource "aws_api_gateway_integration" "request_api_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.request_api.id
+  resource_id             = aws_api_gateway_resource.request_api_resource.id
+  http_method             = aws_api_gateway_method.request_api_method.http_method
+  integration_http_method = "POST"
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.request_api.invoke_arn
+}
+
+resource "aws_api_gateway_deployment" "request_api_deployment" {
+  rest_api_id = aws_api_gateway_rest_api.request_api.id
+
+  depends_on = [
+    aws_api_gateway_integration.request_api_integration,
+  ]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_api_gateway_stage" "request_api_stage" {
+  stage_name    = local.env
+  rest_api_id   = aws_api_gateway_rest_api.request_api.id
+  deployment_id = aws_api_gateway_deployment.request_api_deployment.id
+
+  tags = {
+    Name = "${local.project}-${local.env}-agw-stage"
+  }
+}
+
+resource "aws_lambda_permission" "apigateway_request_api" {
+  statement_id  = "AllowExecutionFromAPIGateway"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.request_api.function_name
+  principal     = "apigateway.amazonaws.com"
+  source_arn    = "${aws_api_gateway_rest_api.request_api.execution_arn}/*/*"
+}
+
+
+# ===============================================================================
 # Amazon API Gateway (REST API / Response API)
 # ===============================================================================
 resource "aws_api_gateway_rest_api" "response_api" {
