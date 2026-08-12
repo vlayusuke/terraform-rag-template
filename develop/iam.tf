@@ -821,6 +821,9 @@ data "aws_iam_policy_document" "cloudwatch_synthetics" {
     ]
     resources = [
       "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/cwssyn-${aws_synthetics_canary.check_request_api.name}-*",
+      "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/cwssyn-${aws_synthetics_canary.check_request_api.name}-*:log-stream:*",
+      "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/cwssyn-${aws_synthetics_canary.check_response_api.name}-*",
+      "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/lambda/cwssyn-${aws_synthetics_canary.check_response_api.name}-*:log-stream:*",
     ]
   }
 
