@@ -35,15 +35,15 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 ### PythonのVersionについて
 
-Pythonのバージョンについては、macOS上でHomebrewでパッケージを管理している場合は、定期的に`brew outdated`コマンド実行して更新状況を能動的に確認してください。
+Pythonのバージョンは、macOS上でHomebrewでパッケージを管理している場合には、定期的に`brew outdated`コマンドを実行して、更新状況を能動的に確認し、適宜最新バージョンに追随するようにしてください。
 
 ### Terraformや各種ProviderのVersion
 
 | Resources                  | Version |
 | :------------------------- | ------: |
 | Terraform                  | 1.15.8  |
-| AWS Provider               | 6.58.0  |
-| AWS Cloud Control Provider | 1.96.0  |
+| AWS Provider               | 6.59.0  |
+| AWS Cloud Control Provider | 1.97.0  |
 
 ### AWS Lambda関数に使用しているPythonのruntime
 
@@ -57,9 +57,9 @@ Pythonのバージョンについては、macOS上でHomebrewでパッケージ�
 
 | Environmtnt | Resource | Notice           |
 | :---------- | -------: | :--------------- |
-| develop     |      376 | N/A              |
-| staging     |      376 | N/A              |
-| production  |      376 | N/A              |
+| develop     |      387 | N/A              |
+| staging     |      387 | N/A              |
+| production  |      387 | N/A              |
 | audit       |      136 | Each AWS account |
 
 ## 環境構築をする際の注意事項
