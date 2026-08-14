@@ -2,7 +2,11 @@
 # Amazon SNS Topic for Metric Alarm
 # ===============================================================================
 resource "aws_sns_topic" "metric_alarm" {
-  name = "${local.project}-${local.env}-sns-metric-alarm-topic"
+  name                             = "${local.project}-${local.env}-sns-metric-alarm-topic"
+  display_name                     = "Amazon SNS Topic for Metric Alarm"
+  lambda_success_feedback_role_arn = aws_iam_role.lambda_cloudwatch.arn
+  lambda_failure_feedback_role_arn = aws_iam_role.lambda_cloudwatch.arn
+  signature_version                = 2
 
   delivery_policy = jsonencode({
     "http" : {
@@ -88,7 +92,11 @@ data "aws_iam_policy_document" "metric_alarm" {
 # Amazon SNS Topic for Event Alarm
 # ===============================================================================
 resource "aws_sns_topic" "event_alarm" {
-  name = "${local.project}-${local.env}-sns-event-alarm-topic"
+  name                             = "${local.project}-${local.env}-sns-event-alarm-topic"
+  display_name                     = "Amazon SNS Topic for Event Alarm"
+  lambda_success_feedback_role_arn = aws_iam_role.lambda_cloudwatch.arn
+  lambda_failure_feedback_role_arn = aws_iam_role.lambda_cloudwatch.arn
+  signature_version                = 2
 
   delivery_policy = jsonencode({
     "http" : {
@@ -174,7 +182,11 @@ data "aws_iam_policy_document" "event_alarm" {
 # Amazon SNS Topic for Event Notification
 # ===============================================================================
 resource "aws_sns_topic" "event_notification" {
-  name = "${local.project}-${local.env}-sns-event-notification-topic"
+  name                             = "${local.project}-${local.env}-sns-event-notification-topic"
+  display_name                     = "Amazon SNS Topic for Event Notification"
+  lambda_success_feedback_role_arn = aws_iam_role.lambda_cloudwatch.arn
+  lambda_failure_feedback_role_arn = aws_iam_role.lambda_cloudwatch.arn
+  signature_version                = 2
 
   delivery_policy = jsonencode({
     "http" : {
