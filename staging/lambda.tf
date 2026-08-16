@@ -24,6 +24,7 @@ resource "aws_lambda_function" "request_api" {
   }
 
   depends_on = [
+    aws_iam_role.lambda_request_api,
     aws_kms_key.lambda,
   ]
 
@@ -73,15 +74,16 @@ resource "aws_lambda_function" "response_api" {
     }
   }
 
-  depends_on = [
-    aws_kms_key.lambda,
-  ]
-
   lifecycle {
     ignore_changes = [
       source_code_hash,
     ]
   }
+
+  depends_on = [
+    aws_iam_role.lambda_response_api,
+    aws_kms_key.lambda,
+  ]
 
   tags = {
     Name = "${local.project}-${local.env}-lmd-apigw-response-api"
@@ -128,15 +130,16 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
     }
   }
 
-  depends_on = [
-    aws_kms_key.lambda,
-  ]
-
   lifecycle {
     ignore_changes = [
       source_code_hash,
     ]
   }
+
+  depends_on = [
+    aws_iam_role.lambda_cloudwatch,
+    aws_kms_key.lambda,
+  ]
 
   tags = {
     Name = "${local.project}-${local.env}-lmd-cwt-log-error-alert"
@@ -184,15 +187,16 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
     }
   }
 
-  depends_on = [
-    aws_kms_key.lambda,
-  ]
-
   lifecycle {
     ignore_changes = [
       source_code_hash,
     ]
   }
+
+  depends_on = [
+    aws_iam_role.lambda_cloudwatch,
+    aws_kms_key.lambda,
+  ]
 
   tags = {
     Name = "${local.project}-${local.env}-lmd-cwt-metric-alarm"
