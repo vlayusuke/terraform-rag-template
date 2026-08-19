@@ -23,6 +23,10 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_postgresql_logs" {
     prevent_destroy = false
   }
 
+  depends_on = [
+    aws_iam_role.amazon_data_firehose,
+  ]
+
   tags = {
     Name = "${local.project}-${local.env}-adf-aur-postgresql-logs-to-s3"
   }
@@ -50,6 +54,10 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_instance_logs" {
     prevent_destroy = false
   }
 
+  depends_on = [
+    aws_iam_role.amazon_data_firehose,
+  ]
+
   tags = {
     Name = "${local.project}-${local.env}-adf-aur-instance-logs-to-s3"
   }
@@ -76,6 +84,10 @@ resource "aws_kinesis_firehose_delivery_stream" "aurora_iam_db_auth_error_logs" 
   lifecycle {
     prevent_destroy = false
   }
+
+  depends_on = [
+    aws_iam_role.amazon_data_firehose,
+  ]
 
   tags = {
     Name = "${local.project}-${local.env}-adf-aur-iam-db-auth-error-logs-to-s3"
@@ -109,6 +121,10 @@ resource "aws_kinesis_firehose_delivery_stream" "lambda_logs" {
     prevent_destroy = false
   }
 
+  depends_on = [
+    aws_iam_role.amazon_data_firehose,
+  ]
+
   tags = {
     Name = "${local.project}-${local.env}-adf-lmd-${each.key}-logs-to-s3"
   }
@@ -140,6 +156,10 @@ resource "aws_kinesis_firehose_delivery_stream" "bedrock_logs" {
   lifecycle {
     prevent_destroy = false
   }
+
+  depends_on = [
+    aws_iam_role.amazon_data_firehose,
+  ]
 
   tags = {
     Name = "${local.project}-${local.env}-adf-brk-${each.key}-logs-to-s3"
