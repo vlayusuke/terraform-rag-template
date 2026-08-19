@@ -1,8 +1,8 @@
 # terraform-rag-template
 
-このテンプレートは、Amazon Web ServicesとTerraformによるRAGを用いたWebアプリケーション向けのリソースを構築するために使用するものです。Amazon Bedrock Knowledge baseを用いて、RAGアプリケーションを構築することを想定しています。
+このテンプレートは、Amazon Web ServicesとTerraformを用いた、RAGを実現するためのWebアプリケーション向けのリソースを構築するために使用するものです。Amazon Bedrock Knowledge baseを用いて、RAGアプリケーションを構築することを想定しています。
 
-また、標準的な3ステージ構成としており、1つのAWSアカウントに対して、1つの環境を構築することを前提としています。
+また、標準的な3ステージ構成としており、1つのAWSアカウントに対して、1つの環境を構築することを前提としています。ただし、1つのAWSアカウントに対して3つの環境を構築することもできるように柔軟性を持たせています。
 
 ## ディレクトリ構成
 
@@ -35,7 +35,7 @@ RAGを用いたWebアプリケーション向けの開発環境を構築する�
 
 ### PythonのVersionについて
 
-Pythonのバージョンは、macOS上でHomebrewでパッケージを管理している場合には、定期的に`brew outdated`コマンドを実行して、更新状況を能動的に確認し、適宜最新バージョンに追随するようにしてください。
+Pythonのバージョンは、macOS上で[Homebrew](https://brew.sh/)を用いてパッケージを管理している場合には、定期的に`brew outdated`コマンドを実行して、更新状況を能動的に確認し、適宜最新バージョンに追随するようにしてください。
 
 ### Terraformや各種ProviderのVersion
 
