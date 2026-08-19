@@ -192,6 +192,10 @@ resource "aws_kinesis_firehose_delivery_stream" "sns_logs" {
     prevent_destroy = false
   }
 
+  depends_on = [
+    aws_iam_role.amazon_data_firehose,
+  ]
+
   tags = {
     Name = "${local.project}-${local.env}-adf-sns-logs-to-s3"
   }
@@ -222,6 +226,10 @@ resource "aws_kinesis_firehose_delivery_stream" "ec2_bastion_logs" {
   lifecycle {
     prevent_destroy = false
   }
+
+  depends_on = [
+    aws_iam_role.amazon_data_firehose,
+  ]
 
   tags = {
     Name = "${local.project}-${local.env}-adf-ec2-bastion-logs-to-s3"
