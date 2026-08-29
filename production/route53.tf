@@ -54,7 +54,7 @@ resource "aws_route53_record" "main_AAAA" {
 # Amazon Route 53 Health Check
 # ================================================================================
 resource "aws_route53_health_check" "main" {
-  fqdn              = "${local.env}.${local.domain}"
+  fqdn              = local.domain
   port              = 443
   type              = "HTTPS"
   resource_path     = "/"
@@ -78,7 +78,7 @@ data "aws_route53_zone" "root" {
 resource "aws_route53_record" "root_ns" {
   allow_overwrite = true
   zone_id         = data.aws_route53_zone.root.zone_id
-  name            = "${local.env}.${local.domain}"
+  name            = local.domain
   type            = "NS"
   ttl             = 300
 
