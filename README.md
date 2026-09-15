@@ -57,7 +57,7 @@ Pythonのバージョンは、macOS上で[Homebrew](https://brew.sh/)を用い�
 
 | Environmtnt | Resource | Notice           |
 | :---------- | -------: | :--------------- |
-| Root        |        2 | N/A              |
+| root        |        4 | N/A              |
 | develop     |      388 | N/A              |
 | staging     |      388 | N/A              |
 | production  |      388 | N/A              |
