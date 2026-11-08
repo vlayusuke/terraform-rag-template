@@ -9,7 +9,7 @@ resource "aws_lambda_function" "request_api" {
   filename         = data.archive_file.request_api.output_path
   source_code_hash = data.archive_file.request_api.output_base64sha256
   kms_key_arn      = aws_kms_key.lambda.arn
-  runtime          = "python3.14"
+  runtime          = "python3.15"
   timeout          = 30
   memory_size      = 128
 
@@ -58,7 +58,7 @@ resource "aws_lambda_function" "response_api" {
   filename         = data.archive_file.response_api.output_path
   source_code_hash = data.archive_file.response_api.output_base64sha256
   kms_key_arn      = aws_kms_key.lambda.arn
-  runtime          = "python3.14"
+  runtime          = "python3.15"
   timeout          = 30
   memory_size      = 128
 
@@ -114,7 +114,7 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
   filename         = data.archive_file.lambda_log_error_alert.output_path
   source_code_hash = data.archive_file.lambda_log_error_alert.output_base64sha256
   kms_key_arn      = aws_kms_key.lambda.arn
-  runtime          = "python3.14"
+  runtime          = "python3.15"
   timeout          = 10
   memory_size      = 128
 
@@ -169,7 +169,7 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
   filename         = data.archive_file.lambda_metric_alarm.output_path
   source_code_hash = data.archive_file.lambda_metric_alarm.output_base64sha256
   kms_key_arn      = aws_kms_key.lambda.arn
-  runtime          = "python3.14"
+  runtime          = "python3.15"
   timeout          = 10
   memory_size      = 128
 
