@@ -18,6 +18,7 @@ data "aws_iam_policy_document" "lambda_cloudwatch_audit_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -87,6 +88,7 @@ data "aws_iam_policy_document" "lambda_root_login_monitoring_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -110,6 +112,7 @@ data "aws_iam_policy_document" "lambda_root_login_monitoring" {
     sid    = "GenerateLogs"
     effect = "Allow"
     actions = [
+      "logs:CreateLogGroup",
       "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
@@ -156,6 +159,7 @@ data "aws_iam_policy_document" "lambda_error_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -176,10 +180,11 @@ resource "aws_iam_policy" "lambda_error" {
 
 data "aws_iam_policy_document" "lambda_error" {
   statement {
-    sid    = "GenerateLogs"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogGroup",
+      "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
     resources = [
@@ -225,6 +230,7 @@ data "aws_iam_policy_document" "lambda_security_notice_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -245,10 +251,11 @@ resource "aws_iam_policy" "lambda_security_notice" {
 
 data "aws_iam_policy_document" "lambda_security_notice" {
   statement {
-    sid    = "GenerateLogs"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogGroup",
+      "logs:CreateLogStream",
       "logs:PutLogEvents",
     ]
     resources = [
@@ -293,6 +300,7 @@ data "aws_iam_policy_document" "chatbot_audit_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -335,7 +343,7 @@ data "aws_iam_policy_document" "chatbot_audit" {
   }
 
   statement {
-    sid    = "LogAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:PutLogEvents",
@@ -413,6 +421,11 @@ data "aws_iam_policy_document" "chatbot_audit_guardrail" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "chatbot_audit_guardrail" {
+  role       = aws_iam_role.chatbot_audit.name
+  policy_arn = aws_iam_policy.chatbot_audit_guardrail.arn
+}
+
 
 # ===============================================================================
 # AWS IAM for AWS Config
@@ -434,6 +447,7 @@ data "aws_iam_policy_document" "config_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -535,6 +549,7 @@ data "aws_iam_policy_document" "cloudtrail_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -570,7 +585,7 @@ data "aws_iam_policy_document" "cloudtrail" {
   }
 
   statement {
-    sid    = "LogAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogGroup",
@@ -609,6 +624,7 @@ data "aws_iam_policy_document" "sns_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -630,7 +646,7 @@ resource "aws_iam_policy" "sns" {
 
 data "aws_iam_policy_document" "sns" {
   statement {
-    sid    = "DescribeLogs"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogGroup",
@@ -681,6 +697,7 @@ data "aws_iam_policy_document" "eventbridge_to_sns_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
