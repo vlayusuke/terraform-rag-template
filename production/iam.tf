@@ -42,12 +42,14 @@ data "aws_iam_policy_document" "github_actions_deploy_assume" {
     actions = [
       "sts:AssumeRoleWithWebIdentity",
     ]
+
     principals {
       type = "Federated"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com",
       ]
     }
+
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
@@ -63,12 +65,14 @@ data "aws_iam_policy_document" "github_actions_deploy_assume" {
     actions = [
       "sts:AssumeRoleWithWebIdentity",
     ]
+
     principals {
       type = "Federated"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com",
       ]
     }
+
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
@@ -101,12 +105,14 @@ data "aws_iam_policy_document" "github_actions_backup_assume" {
     actions = [
       "sts:AssumeRoleWithWebIdentity",
     ]
+
     principals {
       type = "Federated"
       identifiers = [
         "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com",
       ]
     }
+
     condition {
       test     = "StringLike"
       variable = "token.actions.githubusercontent.com:sub"
@@ -169,6 +175,7 @@ data "aws_iam_policy_document" "lambda_request_api_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -189,7 +196,7 @@ resource "aws_iam_policy" "lambda_request_api" {
 
 data "aws_iam_policy_document" "lambda_request_api" {
   statement {
-    sid    = "LogAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogGroup",
@@ -228,6 +235,7 @@ data "aws_iam_policy_document" "lambda_response_api_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -248,7 +256,7 @@ resource "aws_iam_policy" "lambda_response_api" {
 
 data "aws_iam_policy_document" "lambda_response_api" {
   statement {
-    sid    = "LogAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogGroup",
@@ -316,6 +324,7 @@ data "aws_iam_policy_document" "lambda_cloudwatch_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -336,7 +345,7 @@ resource "aws_iam_policy" "lambda_cloudwatch" {
 
 data "aws_iam_policy_document" "lambda_cloudwatch" {
   statement {
-    sid    = "LogAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogGroup",
@@ -385,6 +394,7 @@ data "aws_iam_policy_document" "amazon_data_firehose_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -469,6 +479,7 @@ data "aws_iam_policy_document" "bedrock_agent_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -566,6 +577,7 @@ data "aws_iam_policy_document" "bedrock_knowledge_base_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -677,6 +689,7 @@ data "aws_iam_policy_document" "rds_iam_auth_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -729,11 +742,12 @@ resource "aws_iam_role" "rds_performance_insights" {
 
 data "aws_iam_policy_document" "rds_performance_insights_assume" {
   statement {
-    sid    = "RDSPInsightsAssume"
+    sid    = "RDSPerformanceInsightsAssume"
     effect = "Allow"
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -791,6 +805,7 @@ data "aws_iam_policy_document" "cloudwatch_synthetics_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -812,7 +827,7 @@ resource "aws_iam_policy" "cloudwatch_synthetics" {
 
 data "aws_iam_policy_document" "cloudwatch_synthetics" {
   statement {
-    sid    = "LogAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogStream",
@@ -860,6 +875,7 @@ data "aws_iam_policy_document" "cloudwatch_synthetics" {
     resources = [
       aws_kms_key.synthetics.arn,
     ]
+
     condition {
       test     = "StringEquals"
       variable = "kms:ViaService"
@@ -904,6 +920,7 @@ data "aws_iam_policy_document" "bastion_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -936,7 +953,7 @@ data "aws_iam_policy_document" "bastion" {
   }
 
   statement {
-    sid    = "CloudWatchLogsAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:CreateLogStream",
@@ -991,6 +1008,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_to_amazon_data_firehose_assume" 
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -1013,7 +1031,7 @@ resource "aws_iam_policy" "cloudwatch_logs_to_amazon_data_firehose" {
 
 data "aws_iam_policy_document" "cloudwatch_logs_to_amazon_data_firehose" {
   statement {
-    sid    = "AmazonDataFirehoseAccess"
+    sid    = "ADFAccess"
     effect = "Allow"
     actions = [
       "firehose:PutRecord",
@@ -1025,7 +1043,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_to_amazon_data_firehose" {
   }
 
   statement {
-    sid    = "CloudWatchLogsAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:PutLogEvents",
@@ -1076,6 +1094,7 @@ data "aws_iam_policy_document" "inspector_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -1131,6 +1150,7 @@ data "aws_iam_policy_document" "chatbot_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -1172,6 +1192,7 @@ data "aws_iam_policy_document" "chatbot" {
       aws_sns_topic.event_alarm.arn,
       aws_sns_topic.event_notification.arn,
     ]
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceOwner"
@@ -1196,7 +1217,7 @@ data "aws_iam_policy_document" "chatbot" {
   }
 
   statement {
-    sid    = "LogAccess"
+    sid    = "LogsCreate"
     effect = "Allow"
     actions = [
       "logs:PutLogEvents",
@@ -1268,6 +1289,11 @@ data "aws_iam_policy_document" "chatbot_guardrail" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "chatbot_guardrail" {
+  role       = aws_iam_role.chatbot.name
+  policy_arn = aws_iam_policy.chatbot_guardrail.arn
+}
+
 
 # ===============================================================================
 # AWS IAM for AWS Data Lifecycle Manager
@@ -1290,6 +1316,7 @@ data "aws_iam_policy_document" "dlm_assume" {
     actions = [
       "sts:AssumeRole",
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -1442,6 +1469,7 @@ data "aws_iam_policy_document" "enforce_mfa" {
     resources = [
       "*",
     ]
+
     condition {
       test     = "BoolIfExists"
       variable = "aws:MultiFactorAuthPresent"
