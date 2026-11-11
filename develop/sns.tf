@@ -51,18 +51,18 @@ data "aws_iam_policy_document" "metric_alarm" {
       aws_sns_topic.metric_alarm.arn,
     ]
 
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceOwner"
       values = [
         data.aws_caller_identity.current.account_id,
-      ]
-    }
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "*",
       ]
     }
   }
@@ -141,18 +141,18 @@ data "aws_iam_policy_document" "event_alarm" {
       aws_sns_topic.event_alarm.arn,
     ]
 
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceOwner"
       values = [
         data.aws_caller_identity.current.account_id,
-      ]
-    }
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "*",
       ]
     }
   }
@@ -231,18 +231,18 @@ data "aws_iam_policy_document" "event_notification" {
       aws_sns_topic.event_notification.arn,
     ]
 
+    principals {
+      type = "AWS"
+      identifiers = [
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root",
+      ]
+    }
+
     condition {
       test     = "StringEquals"
       variable = "AWS:SourceOwner"
       values = [
         data.aws_caller_identity.current.account_id,
-      ]
-    }
-
-    principals {
-      type = "AWS"
-      identifiers = [
-        "*",
       ]
     }
   }
