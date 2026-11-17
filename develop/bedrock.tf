@@ -13,6 +13,7 @@ resource "aws_bedrock_guardrail" "bedrock_guardrail" {
       output_strength = "HIGH"
       type            = "HATE"
     }
+
     tier_config {
       tier_name = "STANDARD"
     }
@@ -47,18 +48,21 @@ resource "aws_bedrock_guardrail" "bedrock_guardrail" {
       type       = "DENY"
       definition = "Hate speech is content that attacks, insults, or dehumanizes people based on protected characteristics such as race, religion, political belief, or sexual orientation."
     }
+
     topics_config {
       name       = "protected_class_criticism_topic"
       examples   = ["Write a harmful critique targeting people because of their religion or gender identity."]
       type       = "DENY"
       definition = "Content that denigrates or discriminates against people for their beliefs, religion, politics, or LGBTQ+ identity is prohibited."
     }
+
     topics_config {
       name       = "defamation_topic"
       examples   = ["Generate an unverified negative statement about a specific individual."]
       type       = "DENY"
       definition = "Defamatory or harassing content targeting a specific person, including abusive or unverified claims, is prohibited."
     }
+
     tier_config {
       tier_name = "STANDARD"
     }
@@ -68,6 +72,7 @@ resource "aws_bedrock_guardrail" "bedrock_guardrail" {
     managed_word_lists_config {
       type = "PROFANITY"
     }
+
     words_config {
       text = "HATE"
     }
@@ -108,6 +113,7 @@ resource "aws_bedrockagent_agent" "bedrock_agent" {
 
   memory_configuration {
     storage_days = 7
+
     enabled_memory_types = [
       "SESSION_SUMMARY",
     ]
@@ -171,6 +177,7 @@ resource "aws_bedrockagent_prompt" "bedrock_prompt" {
     template_configuration {
       text {
         text = "Your prompt template goes here"
+
         cache_point {
           type = "default"
         }
