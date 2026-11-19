@@ -45,6 +45,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "rag_document" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -117,18 +118,19 @@ data "aws_iam_policy_document" "rag_document" {
       aws_s3_bucket.rag_document.arn,
       "${aws_s3_bucket.rag_document.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -179,6 +181,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "vpc_flow_log" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -245,18 +248,19 @@ data "aws_iam_policy_document" "vpc_flow_log" {
       aws_s3_bucket.vpc_flow_log.arn,
       "${aws_s3_bucket.vpc_flow_log.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -318,6 +322,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "lambda_logs" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -384,18 +389,19 @@ data "aws_iam_policy_document" "lambda_logs" {
       aws_s3_bucket.lambda_logs.arn,
       "${aws_s3_bucket.lambda_logs.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -446,6 +452,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "aurora_logs" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -512,18 +519,19 @@ data "aws_iam_policy_document" "aurora_logs" {
       aws_s3_bucket.aurora_logs.arn,
       "${aws_s3_bucket.aurora_logs.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -574,6 +582,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bedrock_logs" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -640,18 +649,19 @@ data "aws_iam_policy_document" "bedrock_logs" {
       aws_s3_bucket.bedrock_logs.arn,
       "${aws_s3_bucket.bedrock_logs.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -702,6 +712,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bastion_logs" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -768,18 +779,19 @@ data "aws_iam_policy_document" "bastion_logs" {
       aws_s3_bucket.bastion_logs.arn,
       "${aws_s3_bucket.bastion_logs.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -830,6 +842,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sns_logs" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -896,18 +909,19 @@ data "aws_iam_policy_document" "sns_logs" {
       aws_s3_bucket.sns_logs.arn,
       "${aws_s3_bucket.sns_logs.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -943,7 +957,8 @@ resource "aws_s3_bucket_acl" "sns_event_logs" {
 }
 
 resource "aws_s3_bucket_public_access_block" "sns_event_logs" {
-  bucket                  = aws_s3_bucket.sns_event_logs.id
+  bucket = aws_s3_bucket.sns_event_logs.id
+
   block_public_acls       = true
   block_public_policy     = true
   ignore_public_acls      = true
@@ -957,6 +972,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "sns_event_logs" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -1023,18 +1039,19 @@ data "aws_iam_policy_document" "sns_event_logs" {
       aws_s3_bucket.sns_event_logs.arn,
       "${aws_s3_bucket.sns_event_logs.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -1085,6 +1102,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "cloudfront_logs" 
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -1151,18 +1169,19 @@ data "aws_iam_policy_document" "cloudfront_logs" {
       aws_s3_bucket.cloudfront_logs.arn,
       "${aws_s3_bucket.cloudfront_logs.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -1213,6 +1232,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "waf_logs" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -1279,18 +1299,19 @@ data "aws_iam_policy_document" "waf_logs" {
       aws_s3_bucket.waf_logs.arn,
       "${aws_s3_bucket.waf_logs.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -1343,6 +1364,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "synthetics_artifa
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -1374,18 +1396,19 @@ data "aws_iam_policy_document" "synthetics_artifacts_bucket_policy" {
       aws_s3_bucket.synthetics_artifacts.arn,
       "${aws_s3_bucket.synthetics_artifacts.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -1419,6 +1442,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "synthetics_result
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -1485,18 +1509,19 @@ data "aws_iam_policy_document" "synthetics_results_bucket_policy" {
       aws_s3_bucket.synthetics_results.arn,
       "${aws_s3_bucket.synthetics_results.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -1557,6 +1582,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bastion" {
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -1566,6 +1592,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bastion" {
 
 resource "aws_s3_bucket_versioning" "bastion" {
   bucket = aws_s3_bucket.bastion.id
+
   versioning_configuration {
     status = "Enabled"
   }
@@ -1716,6 +1743,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "source_backup_osa
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -1751,18 +1779,19 @@ data "aws_iam_policy_document" "source_backup_osaka" {
       aws_s3_bucket.source_backup_osaka.arn,
       "${aws_s3_bucket.source_backup_osaka.arn}/*",
     ]
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values = [
-        "false",
-      ]
-    }
 
     principals {
       type = "AWS"
       identifiers = [
         "*",
+      ]
+    }
+
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values = [
+        "false",
       ]
     }
   }
@@ -1813,6 +1842,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "s3_server_access_
     blocked_encryption_types = [
       "SSE-C"
     ]
+
     apply_server_side_encryption_by_default {
       sse_algorithm = "AES256"
     }
@@ -1878,6 +1908,14 @@ data "aws_iam_policy_document" "s3_server_access_logs" {
     resources = [
       "${aws_s3_bucket.s3_server_access_logs.arn}/*",
     ]
+
+    principals {
+      type = "Service"
+      identifiers = [
+        "logging.s3.amazonaws.com",
+      ]
+    }
+
     condition {
       test     = "ArnLike"
       variable = "aws:SourceArn"
@@ -1885,18 +1923,12 @@ data "aws_iam_policy_document" "s3_server_access_logs" {
         aws_s3_bucket.rag_document.arn,
       ]
     }
+
     condition {
       test     = "StringEquals"
       variable = "aws:SourceAccount"
       values = [
         "${data.aws_caller_identity.current.account_id}",
-      ]
-    }
-
-    principals {
-      type = "Service"
-      identifiers = [
-        "logging.s3.amazonaws.com",
       ]
     }
   }
