@@ -31,6 +31,7 @@ data "aws_iam_policy_document" "lambda_cloudwatch_audit_assume" {
 resource "aws_iam_policy" "lambda_cloudwatch_audit" {
   name   = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-policy"
   policy = data.aws_iam_policy_document.lambda_cloudwatch_audit.json
+
   tags = {
     Name = "${local.project}-${local.env}-iam-lmd-cwt-logs-error-alert-policy"
   }
