@@ -293,7 +293,7 @@ data "aws_iam_policy_document" "lambda_response_api" {
       "bedrock:ListFoundationModels",
     ]
     resources = [
-      "*",
+      "arn:aws:bedrock:${local.region}:${data.aws_caller_identity.current.account_id}:model/*",
     ]
   }
 }
@@ -533,7 +533,7 @@ data "aws_iam_policy_document" "bedrock_agent" {
       "bedrock:Retrieve",
     ]
     resources = [
-      "*",
+      "arn:aws:bedrock:${local.region}:${data.aws_caller_identity.current.account_id}:model/*",
     ]
   }
 
@@ -605,7 +605,7 @@ data "aws_iam_policy_document" "bedrock_knowledge_base" {
       "bedrock:ListCustomModels",
     ]
     resources = [
-      "*",
+      "arn:aws:bedrock:${local.region}:${data.aws_caller_identity.current.account_id}:model/*",
     ]
   }
 
@@ -1038,7 +1038,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_to_amazon_data_firehose" {
       "firehose:PutRecordBatch",
     ]
     resources = [
-      "*",
+      "arn:aws:firehose:${local.region}:${data.aws_caller_identity.current.account_id}:deliverystream/*",
     ]
   }
 
@@ -1344,7 +1344,7 @@ data "aws_iam_policy_document" "dlm" {
       "dlm:*",
     ]
     resources = [
-      "*",
+      "arn:aws:dlm:${local.region}:${data.aws_caller_identity.current.account_id}:*",
     ]
   }
 
@@ -1369,7 +1369,7 @@ data "aws_iam_policy_document" "dlm" {
       "iam:ListRoles",
     ]
     resources = [
-      "*",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/*",
     ]
   }
 
@@ -1397,7 +1397,8 @@ data "aws_iam_policy_document" "dlm" {
       "kms:ListAliases",
     ]
     resources = [
-      "*",
+      "arn:aws:ec2:${local.region}:${data.aws_caller_identity.current.account_id}:volume/*",
+      "arn:aws:ec2:${local.region}:${data.aws_caller_identity.current.account_id}:snapshot/*",
     ]
   }
 
@@ -1408,7 +1409,7 @@ data "aws_iam_policy_document" "dlm" {
       "ec2:CreateTags",
     ]
     resources = [
-      "arn:aws:ec2:*::snapshot/*",
+      "arn:aws:ec2:${local.region}:${data.aws_caller_identity.current.account_id}:snapshot/*",
     ]
   }
 
@@ -1467,7 +1468,7 @@ data "aws_iam_policy_document" "enforce_mfa" {
       "iam:ReadOnlyAccess",
     ]
     resources = [
-      "*",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/*",
     ]
 
     condition {
@@ -1517,7 +1518,7 @@ data "aws_iam_policy_document" "deny_cloud9_access" {
       "cloud9:*",
     ]
     resources = [
-      "*",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/*",
     ]
   }
 }
@@ -1551,7 +1552,8 @@ data "aws_iam_policy_document" "allow_mfa_configure" {
       "iam:ChangePassword",
     ]
     resources = [
-      "*",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/*",
+      "arn:aws:iam::${data.aws_caller_identity.current.account_id}:group/*",
     ]
   }
 }
