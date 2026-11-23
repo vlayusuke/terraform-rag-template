@@ -25,14 +25,13 @@ resource "aws_rds_cluster" "aurora_postgres" {
   performance_insights_retention_period = 7
   performance_insights_kms_key_id       = aws_kms_key.aurora.arn
   apply_immediately                     = true
-
-  manage_master_user_password  = true
-  deletion_protection          = false
-  storage_encrypted            = true
-  enable_http_endpoint         = true
-  backup_retention_period      = 7
-  preferred_backup_window      = "21:30-22:30"
-  preferred_maintenance_window = "sat:20:00-sat:21:00"
+  manage_master_user_password           = true
+  deletion_protection                   = false
+  storage_encrypted                     = true
+  enable_http_endpoint                  = true
+  backup_retention_period               = 7
+  preferred_backup_window               = "21:30-22:30"
+  preferred_maintenance_window          = "sat:20:00-sat:21:00"
 
   iam_roles = [
     aws_iam_role.rds_iam_auth.arn,
@@ -65,6 +64,7 @@ resource "aws_rds_cluster" "aurora_postgres" {
 
 resource "aws_db_subnet_group" "aurora_postgres" {
   name = "${local.project}-${local.env}-aur-serverless-subg"
+
   subnet_ids = [
     for subnet in aws_subnet.main_private :
     subnet.id
@@ -114,7 +114,7 @@ resource "aws_rds_cluster_instance" "aurora_postgres_instance" {
 # ===============================================================================
 resource "aws_db_parameter_group" "aurora_postgres" {
   name        = "${local.project}-${local.env}-aur-serverless-instance-dbpg"
-  family      = "aurora-postgresql15"
+  family      = "aurora-postgresql17.3"
   description = "Parameter group for Aurora PostgreSQL for ${local.project}"
 
   tags = {
@@ -136,6 +136,7 @@ resource "terraform_data" "setup_vector_database" {
   # Wait for Data API to be reachable on the writer (retries until success)
   provisioner "local-exec" {
     command = "bash ./src/rds_setting_scripts/00_wait_for_data_api.sh"
+
     environment = {
       REGION        = local.region
       CLUSTER_ARN   = aws_rds_cluster.aurora_postgres.arn
@@ -148,6 +149,7 @@ resource "terraform_data" "setup_vector_database" {
   # Install pgvector and check the version
   provisioner "local-exec" {
     command = "bash ./src/rds_setting_scripts/01_install_pgvector.sh"
+
     environment = {
       REGION      = local.region
       CLUSTER_ARN = aws_rds_cluster.aurora_postgres.arn
@@ -161,6 +163,7 @@ resource "terraform_data" "setup_vector_database" {
   # Create a specific schema that Bedrock can use to query the data
   provisioner "local-exec" {
     command = "bash ./src/rds_setting_scripts/02_create_schema.sh"
+
     environment = {
       REGION        = local.region
       CLUSTER_ARN   = aws_rds_cluster.aurora_postgres.arn
@@ -173,6 +176,7 @@ resource "terraform_data" "setup_vector_database" {
   # Grant the bedrock_user permission to manage the bedrock_integration schema
   provisioner "local-exec" {
     command = "bash ./src/rds_setting_scripts/03_create_role.sh"
+
     environment = {
       REGION        = local.region
       CLUSTER_ARN   = aws_rds_cluster.aurora_postgres.arn
@@ -187,6 +191,7 @@ resource "terraform_data" "setup_vector_database" {
   # Login as the bedrock_user and create a table in the bedrock_integration schema
   provisioner "local-exec" {
     command = "bash ./src/rds_setting_scripts/04_grant_schema.sh"
+
     environment = {
       REGION        = local.region
       CLUSTER_ARN   = aws_rds_cluster.aurora_postgres.arn
@@ -200,6 +205,7 @@ resource "terraform_data" "setup_vector_database" {
   # Create an index with the cosine operator which the bedrock can use to query the data.
   provisioner "local-exec" {
     command = "bash ./src/rds_setting_scripts/05_create_table.sh"
+
     environment = {
       REGION              = local.region
       CLUSTER_ARN         = aws_rds_cluster.aurora_postgres.arn
@@ -214,6 +220,7 @@ resource "terraform_data" "setup_vector_database" {
   # Create an index with the cosine operator which the bedrock can use to query the data.
   provisioner "local-exec" {
     command = "bash ./src/rds_setting_scripts/06_create_index.sh"
+
     environment = {
       REGION        = local.region
       CLUSTER_ARN   = aws_rds_cluster.aurora_postgres.arn
