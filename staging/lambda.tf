@@ -25,6 +25,7 @@ resource "aws_lambda_function" "request_api" {
 
   depends_on = [
     aws_kms_key.lambda,
+    aws_iam_role_policy_attachment.lambda_request_api,
   ]
 
   tags = {
@@ -81,6 +82,7 @@ resource "aws_lambda_function" "response_api" {
 
   depends_on = [
     aws_kms_key.lambda,
+    aws_iam_role_policy_attachment.lambda_response_api,
   ]
 
   tags = {
@@ -136,6 +138,7 @@ resource "aws_lambda_function" "lambda_log_error_alert" {
 
   depends_on = [
     aws_kms_key.lambda,
+    aws_iam_role_policy_attachment.lambda_cloudwatch,
   ]
 
   tags = {
@@ -192,6 +195,7 @@ resource "aws_lambda_function" "lambda_metric_alarm" {
 
   depends_on = [
     aws_kms_key.lambda,
+    aws_iam_role_policy_attachment.lambda_cloudwatch,
   ]
 
   tags = {
