@@ -33,6 +33,7 @@ data "aws_iam_policy_document" "application_kms_policy" {
     resources = [
       aws_kms_key.application.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -50,6 +51,7 @@ data "aws_iam_policy_document" "application_kms_policy" {
     resources = [
       aws_kms_key.application.arn,
     ]
+
     principals {
       type = "AWS"
       identifiers = [
@@ -96,6 +98,7 @@ data "aws_iam_policy_document" "lambda_kms_policy" {
     resources = [
       aws_kms_key.lambda.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -113,6 +116,7 @@ data "aws_iam_policy_document" "lambda_kms_policy" {
     resources = [
       aws_kms_key.lambda.arn,
     ]
+
     principals {
       type = "AWS"
       identifiers = [
@@ -159,6 +163,7 @@ data "aws_iam_policy_document" "aurora_kms_policy" {
     resources = [
       aws_kms_key.aurora.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -176,6 +181,7 @@ data "aws_iam_policy_document" "aurora_kms_policy" {
     resources = [
       aws_kms_key.aurora.arn,
     ]
+
     principals {
       type = "AWS"
       identifiers = [
@@ -222,6 +228,7 @@ data "aws_iam_policy_document" "ebs_kms_policy" {
     resources = [
       aws_kms_key.ebs.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -239,6 +246,7 @@ data "aws_iam_policy_document" "ebs_kms_policy" {
     resources = [
       aws_kms_key.ebs.arn,
     ]
+
     principals {
       type = "AWS"
       identifiers = [
@@ -285,6 +293,7 @@ data "aws_iam_policy_document" "synthetics_kms_policy" {
     resources = [
       aws_kms_key.synthetics.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -302,6 +311,7 @@ data "aws_iam_policy_document" "synthetics_kms_policy" {
     resources = [
       aws_kms_key.synthetics.arn,
     ]
+
     principals {
       type = "AWS"
       identifiers = [
@@ -348,6 +358,7 @@ data "aws_iam_policy_document" "bedrock_kms_policy" {
     resources = [
       aws_kms_key.bedrock.arn,
     ]
+
     principals {
       type = "Service"
       identifiers = [
@@ -365,6 +376,7 @@ data "aws_iam_policy_document" "bedrock_kms_policy" {
     resources = [
       aws_kms_key.bedrock.arn,
     ]
+
     principals {
       type = "AWS"
       identifiers = [
