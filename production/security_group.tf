@@ -1,4 +1,37 @@
 # ===============================================================================
+# Security Group for VPC Endpoint (AWS Systems Manager)
+# ===============================================================================
+resource "aws_security_group" "vpce_ssm" {
+  name        = "${local.project}-${local.env}-sgr-vpce-ssm"
+  description = "Security Group for AWS Systems Manager VPC Endpoint"
+  vpc_id      = aws_vpc.main.id
+
+  ingress {
+    description = "Allow HTTPS traffic from VPC Security Group"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = [
+      aws_vpc.main.cidr_block,
+    ]
+  }
+
+  egress {
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    cidr_blocks = [
+      local.default_gateway_cidr,
+    ]
+  }
+
+  tags = {
+    Name = "${local.project}-${local.env}-sgr-vpce-ssm"
+  }
+}
+
+
+# ===============================================================================
 # Security Group for Amazon EC2 (Bastion)
 # ===============================================================================
 resource "aws_security_group" "bastion" {
