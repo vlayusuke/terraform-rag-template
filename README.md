@@ -16,15 +16,15 @@ RAGを用いたWebアプリケーションのAWSリソースのうち、セキ�
 
 ### `/production`
 
-RAGを用いたWebアプリケーション向けの本番環境を構築するためのAWSリソースを実装しています。
+RAGを用いたWebアプリケーションの、本番環境を構築するためのAWSリソースを実装しています。
 
 ### `/staging`
 
-RAGを用いたWebアプリケーション向けのステージング環境を構築するためのAWSリソースを実装しています。
+RAGを用いたWebアプリケーションの、ステージング環境を構築するためのAWSリソースを実装しています。
 
 ### `/develop`
 
-RAGを用いたWebアプリケーション向けの開発環境を構築するためのAWSリソースを実装しています。
+RAGを用いたWebアプリケーションの、開発環境を構築するためのAWSリソースを実装しています。
 
 ## Terraform & 各種Provider & PythonのruntimeのVersion
 
@@ -57,11 +57,11 @@ Pythonのバージョンは、macOS上で[Homebrew](https://brew.sh/)を用い�
 
 | Environmtnt | Resource | Notice           |
 | :---------- | -------: | :--------------- |
-| root        |       4  | N/A              |
-| develop     |     388  | N/A              |
-| staging     |     388  | N/A              |
-| production  |     388  | N/A              |
-| audit       |     136  | Each AWS account |
+| root        |       5  | N/A              |
+| develop     |     394  | N/A              |
+| staging     |     394  | N/A              |
+| production  |     394  | N/A              |
+| audit       |     137  | Each AWS account |
 
 ## 環境構築をする際の注意事項
 
